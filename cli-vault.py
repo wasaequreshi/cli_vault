@@ -28,14 +28,14 @@ class cli_vault:
     
     def add(self, args):
         command = args.command
-        description = args.description
-        tags = args.tags
+        description = args.description if args.description else ""
+        tags = args.tags if args.tags else ""
         
         if self.is_valid_file_path():
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
                 
-                new_data = {"id" : str(uuid.uuid4())[:8] ,"command" : command, "description" : description, "tags" : tags}
+                new_data = {"id" : str(uuid.uuid4())[:8] ,"command" : command, "description" : description, "tags" : tags.split(",")}
                 
                 command_data['data'].append(new_data)
 
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     
     parser_add = subparsers.add_parser('add', help='Allows you to add a cli command/note')
     parser_add.add_argument('-c', '--command', metavar="<command>", help='command/note to store', required=True)
-    parser_add.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search', required=True)
-    parser_add.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search', required=True)
+    parser_add.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search')
+    parser_add.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search')
     parser_add.set_defaults(func=sv.add)
 
     parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli command/note')
