@@ -1,3 +1,3 @@
 # What is it?
 
-This tool helps manage commands developers run on a daily basis on their command line.
+This tool helps developers improve productivity by managing commonly used commands and notes. 
