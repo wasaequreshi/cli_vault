@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
+
 import os
-from pathlib import Path
 import json
 import sys
 import pprint
 import uuid
+import argparse
+from pathlib import Path
 
 class cli_vault:
 
@@ -23,7 +26,11 @@ class cli_vault:
             with open(self.sv_command_file_path, 'w') as outfile:
                 json.dump(command_data, outfile, indent=4)
     
-    def add(self, command, description="", tags=""):
+    def add(self, args):
+        command = args.command
+        description = args.description
+        tags = args.tags
+        
         if self.is_valid_file_path():
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
@@ -35,14 +42,15 @@ class cli_vault:
                 with open(self.sv_command_file_path, 'w') as outfile:
                     json.dump(command_data, outfile, indent=4)
 
-    def list_commands(self):
+    def list_commands(self, args):
         if self.is_valid_file_path():
             command_data = {}
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
                 print(json.dumps(command_data['data'], indent=4, sort_keys=True))
     
-    def delete(self, command_id):
+    def delete(self, args):
+        command_id = args.command_id
         if self.is_valid_file_path():
             command_data = {}
             with open(self.sv_command_file_path) as json_file:
@@ -76,7 +84,8 @@ class cli_vault:
 
 
     # Implement search on existing data
-    def search(self):
+    def search(self, args):
+        print (args)
         pass
 
     # Implement automatically storing command data
@@ -84,14 +93,28 @@ class cli_vault:
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     sv = cli_vault()
-    if len(sys.argv) == 1:
-        print ("Show help")
-    else:
-        command = sys.argv[1]
 
-        if command == "add":
-            sv.add("test", "test", "test")
-        elif command == "list":
-            sv.list_commands()
-        elif command == "delete":
-            sv.delete("44f64ef7")
+    parser = argparse.ArgumentParser(prog='cli-vault', description="Store cli commands or other notes with our tool.")
+    subparsers = parser.add_subparsers()
+    subparsers.required = True
+    subparsers.dest = "add, delete, list, or search"
+    
+    parser_add = subparsers.add_parser('add', help='Allows you to add a cli command/note')
+    parser_add.add_argument('-c', '--command', metavar="<command>", help='command/note to store', required=True)
+    parser_add.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search', required=True)
+    parser_add.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search', required=True)
+    parser_add.set_defaults(func=sv.add)
+
+    parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli command/note')
+    parser_delete.add_argument('-id', '--command_id', help='command/note to delete', required=True)
+    parser_delete.set_defaults(func=sv.delete)
+    
+    parser_list = subparsers.add_parser('list', help='Shows stored commands/notes')
+    parser_list.set_defaults(func=sv.list_commands)
+
+    parser_search = subparsers.add_parser('search', help='Search for stored commands/notes')
+    parser_search.add_argument('-t', '--text', help='Text to search for', required=True)
+    parser_search.set_defaults(func=sv.search)
+
+    args = parser.parse_args()
+    args.func(args)
