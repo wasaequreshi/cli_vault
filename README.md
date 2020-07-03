@@ -1,3 +1,3 @@
 # What is it?
 
-This is a tool to help manage scripts developers run on a daily basis on their machines.
+This tool helps manage commands developers run on a daily basis on their command line.
