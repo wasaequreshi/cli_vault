@@ -70,9 +70,13 @@ class script_vault:
                 else:
                     print("Invalid id")
 
+    # Implement search on existing data
     def search(self):
         pass
-    
+
+    # Implement automatically storing command data
+
+# Add argument parser to handle params and options
 if __name__ == "__main__":
     sv = script_vault()
     if len(sys.argv) == 1:
