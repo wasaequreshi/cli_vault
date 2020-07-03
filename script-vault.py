@@ -24,7 +24,7 @@ class script_vault:
                 json.dump(command_data, outfile, indent=4)
     
     def add(self, command, description="", tags=""):
-        if os.path.isfile(self.sv_command_file_path):
+        if self.is_valid_file_path():
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
                 
@@ -34,18 +34,16 @@ class script_vault:
 
                 with open(self.sv_command_file_path, 'w') as outfile:
                     json.dump(command_data, outfile, indent=4)
-        else:
-            print ("Script vault dir corrupted, remove " + self.sv_dir_path)
 
-    def list(self):
-         if os.path.isfile(self.sv_command_file_path):
+    def list_commands(self):
+        if self.is_valid_file_path():
             command_data = {}
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
                 print(json.dumps(command_data['data'], indent=4, sort_keys=True))
-
+    
     def delete(self, command_id):
-        if os.path.isfile(self.sv_command_file_path):
+        if self.is_valid_file_path():
             command_data = {}
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
@@ -70,6 +68,13 @@ class script_vault:
                 else:
                     print("Invalid id")
 
+    def is_valid_file_path(self):
+        if os.path.isfile(self.sv_command_file_path):
+            return True
+        else:
+            print ("Script vault dir corrupted, remove " + self.sv_dir_path)
+
+
     # Implement search on existing data
     def search(self):
         pass
@@ -87,6 +92,6 @@ if __name__ == "__main__":
         if command == "add":
             sv.add("test", "test", "test")
         elif command == "list":
-            sv.list()
+            sv.list_commands()
         elif command == "delete":
-            sv.delete("c809d0f8")
+            sv.delete("44f64ef7")
