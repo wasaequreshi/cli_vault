@@ -5,7 +5,7 @@ import sys
 import pprint
 import uuid
 
-class script_vault:
+class cli_vault:
 
     sv_dir = ".secure_vault"
     sv_command_file = "commands.json"
@@ -83,7 +83,7 @@ class script_vault:
 
 # Add argument parser to handle params and options
 if __name__ == "__main__":
-    sv = script_vault()
+    sv = cli_vault()
     if len(sys.argv) == 1:
         print ("Show help")
     else:
