@@ -31,3 +31,37 @@ Note: Search doesn't work
 ```sh
 cli-vault search -t <text to search for  command>
 ```
+
+# Examples
+
+Add
+
+```sh
+cli-vault add -c "ssh -i mc.pem ubuntu@52.24.168.12" -d "ssh into minecraft server" -t "minecraft,server"
+```
+
+List
+
+```sh
+wqureshi:  cli-vault list
+[
+    {
+        "command": "ssh -i mc.pem ubuntu@52.24.168.12",
+        "description": "ssh into minecraft server",
+        "id": "4258ab81",
+        "tags": [
+            "minecraft",
+            "server"
+        ]
+    }
+]
+```
+
+Delete
+
+```sh
+wqureshi: cli-vault delete -id "4258ab81" 
+Command deleted
+```
+
+Search (not done)
