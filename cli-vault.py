@@ -7,7 +7,10 @@ import pprint
 import uuid
 import argparse
 from pathlib import Path
-from difflib import get_close_matches
+import string
+from nltk.corpus import stopwords
+import nltk
+import string
 
 class cli_vault:
 
@@ -32,6 +35,18 @@ class cli_vault:
             with open(self.sv_command_file_path, 'w') as outfile:
                 json.dump(command_data, outfile, indent=4)
     
+    def remove_stopwords(self, text):
+        nltk.download('stopwords', quiet=True)
+        stopword = set(stopwords.words('english'))
+
+        text = [word for word in text if word not in stopword]
+        return ' '.join(text)
+
+    def remove_punctuation(self, text):
+        no_punct = [words for words in text if words not in string.punctuation]
+        words_wo_punct = ''.join(no_punct)
+        return words_wo_punct
+
     # Command to add a command/note
     def add(self, args):
         # Getting arguments
@@ -109,16 +124,38 @@ class cli_vault:
     # Searching for command/notes
     def search(self, args):
         # Getting arguments 
-        content = args.content if args.content else ""
-        tags = args.tags if args.tags else ""
+        contents = args.content if args.content else ""
+        contents = contents.split(" ")
+        contents = self.remove_stopwords(contents)
+        contents = self.remove_punctuation(contents)
 
+        tags = args.tags if args.tags else ""
+        tags = tags.split(",")
         # Loading file
         if self.is_valid_file_path():
             command_data = {}
             with open(self.sv_command_file_path) as json_file:
                 command_data = json.load(json_file)
-                # What is the best way to search through commands, description and tags?
+                
+                results_seen = []
+                results = []
+                # Searching via content ind command and description
+                if contents != "":
+                    contents = contents.split(" ")
+                    for content in contents:
+                        for data in command_data['data']: 
+                            if (content in data['command'] or content in data['description'] or content in data['tags']) and data['id'] not in results_seen:
+                                results.append(data)
+                                results_seen.append(data['id'])
 
+                # Searching via tags
+                if tags != "":
+                    for tag in tags:
+                        for data in command_data['data']:
+                            if tag in data['tags'] and data['id'] not in results_seen:
+                                results.append(data)
+                
+                print(json.dumps(results, indent=4, sort_keys=True))
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     
