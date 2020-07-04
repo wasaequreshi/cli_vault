@@ -90,6 +90,7 @@ class cli_vault:
                         new_data.append(data)
                     else:
                         id_found = True
+                
                 # Update data store
                 command_data['data'] = new_data
                 
@@ -125,6 +126,9 @@ class cli_vault:
     def search(self, args):
         # Getting arguments 
         contents = args.content if args.content else ""
+        
+        # Need to ask for advice on whether to keep this, this does improve 
+        # performance, but ruins accuracy :(
         # contents = contents.split(" ")
         # contents = self.remove_stopwords(contents)
         # contents = self.remove_punctuation(contents)
@@ -177,14 +181,13 @@ class cli_vault:
                 # Checking which data to update
                 for data in command_data['data']:
                     if data['id'] == command_id:
-                        id_found = True
                         if command != None:
                             data['command'] = command
                         if description != None:
                             data['description'] = description
                         if tags != None:
                             data['tags'] = tags.split(",")
-                
+                        id_found = True
                 #Write back to file
                 with open(self.sv_command_file_path, 'w') as outfile:
                     json.dump(command_data, outfile, indent=4)
