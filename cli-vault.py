@@ -158,6 +158,7 @@ class cli_vault:
 
                 print(json.dumps(results, indent=4, sort_keys=True))
 
+    # Updating stored commands
     def update(self, args):
         # Getting arguments
         command = args.command
@@ -171,10 +172,9 @@ class cli_vault:
                 command_data = json.load(json_file)
                 
                 # Setting up data
-                new_data = []
                 id_found = False
 
-                # Checking which data to not add
+                # Checking which data to update
                 for data in command_data['data']:
                     if data['id'] == command_id:
                         id_found = True
@@ -189,7 +189,7 @@ class cli_vault:
                 with open(self.sv_command_file_path, 'w') as outfile:
                     json.dump(command_data, outfile, indent=4)
 
-                # Print if it was found or not
+                # Print if it was updated or not
                 if id_found:
                     print("Updated")
                 else:
