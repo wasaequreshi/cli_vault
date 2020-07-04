@@ -37,7 +37,7 @@ class cli_vault:
                     json.dump(command_data, outfile, indent=4)
         else:
             self.sv_dir_path = self.sv_dir
-            self.sv_command_file_path = self.sv_command_file
+            self.sv_command_file_path = os.path.join(self.sv_dir, self.sv_command_file)
             # Checking if directory exists or not, create it otherwise
             if not os.path.isdir(self.sv_dir_path):
                 os.makedirs(self.sv_dir_path)

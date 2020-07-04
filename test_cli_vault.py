@@ -1,5 +1,7 @@
 import unittest
 from cli_vault import cli_vault
+from pathlib import Path
+
 class TestCliVault(unittest.TestCase):
 
     def setUp(self):
