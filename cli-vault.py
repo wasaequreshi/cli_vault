@@ -156,6 +156,7 @@ class cli_vault:
                                 results.append(data)
                 
                 print(json.dumps(results, indent=4, sort_keys=True))
+
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     
