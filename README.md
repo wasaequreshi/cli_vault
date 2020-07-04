@@ -13,7 +13,7 @@ Yes you can save this in a file or document but looking for those can take time.
 First run the following commands:
 ```sh
 chmod +x cli-vault.py
-cp cli-vault.py /usr/local/bin/cli-vault
+cp cli_vault.py /usr/local/bin/cli-vault
 ```
 
 Add a command or note:

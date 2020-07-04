@@ -19,22 +19,36 @@ class cli_vault:
     sv_command_file = "commands.json"
 
     # If folders and files aren't setup, then on each run make sure to do so
-    def __init__(self):
+    def __init__(self, is_test=False):
 
-        # Setting up directory in home and file inside that directory
-        self.sv_dir_path = os.path.join(str(Path.home()), self.sv_dir)
-        self.sv_command_file_path = os.path.join(str(Path.home()), self.sv_dir, self.sv_command_file)
-        
-        # Checking if directory exists or not, create it otherwise
-        if not os.path.isdir(self.sv_dir_path):
-            os.makedirs(self.sv_dir_path)
-        
-        # Check if file exists of not, create it otherwise
-        if not os.path.isfile(self.sv_command_file_path):
-            command_data = {'data' : []}
-            with open(self.sv_command_file_path, 'w') as outfile:
-                json.dump(command_data, outfile, indent=4)
-    
+        if not is_test:
+            # Setting up directory in home and file inside that directory
+            self.sv_dir_path = os.path.join(str(Path.home()), self.sv_dir)
+            self.sv_command_file_path = os.path.join(str(Path.home()), self.sv_dir, self.sv_command_file)
+            
+            # Checking if directory exists or not, create it otherwise
+            if not os.path.isdir(self.sv_dir_path):
+                os.makedirs(self.sv_dir_path)
+            
+            # Check if file exists of not, create it otherwise
+            if not os.path.isfile(self.sv_command_file_path):
+                command_data = {'data' : []}
+                with open(self.sv_command_file_path, 'w') as outfile:
+                    json.dump(command_data, outfile, indent=4)
+        else:
+            self.sv_dir_path = self.sv_dir
+            self.sv_command_file_path = self.sv_command_file
+            # Checking if directory exists or not, create it otherwise
+            if not os.path.isdir(self.sv_dir_path):
+                os.makedirs(self.sv_dir_path)
+            
+            # Check if file exists of not, create it otherwise
+            if not os.path.isfile(self.sv_command_file_path):
+                command_data = {'data' : []}
+                with open(self.sv_command_file_path, 'w') as outfile:
+                    json.dump(command_data, outfile, indent=4)
+
+
     def remove_stopwords(self, text):
         nltk.download('stopwords', quiet=True)
         stopword = set(stopwords.words('english'))
