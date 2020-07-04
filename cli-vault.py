@@ -125,10 +125,10 @@ class cli_vault:
     def search(self, args):
         # Getting arguments 
         contents = args.content if args.content else ""
-        contents = contents.split(" ")
-        contents = self.remove_stopwords(contents)
-        contents = self.remove_punctuation(contents)
-
+        # contents = contents.split(" ")
+        # contents = self.remove_stopwords(contents)
+        # contents = self.remove_punctuation(contents)
+        
         tags = args.tags if args.tags else ""
         tags = tags.split(",")
         # Loading file
@@ -155,7 +155,7 @@ class cli_vault:
                             if tag in data['tags'] and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
-                                
+
                 print(json.dumps(results, indent=4, sort_keys=True))
 
 # Add argument parser to handle params and options
