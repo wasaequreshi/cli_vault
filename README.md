@@ -37,7 +37,7 @@ cli-vault search -t <text to search for  command>
 Add
 
 ```sh
-cli-vault add -c "ssh -i mc.pem ubuntu@52.24.168.12" -d "ssh into minecraft server" -t "minecraft,server"
+cli-vault add -c "ssh -i mc.pem ubuntu@52.24.168.10" -d "ssh into minecraft server" -t "minecraft,server"
 ```
 
 List
@@ -46,7 +46,7 @@ List
 wqureshi:  cli-vault list
 [
     {
-        "command": "ssh -i mc.pem ubuntu@52.24.168.12",
+        "command": "ssh -i mc.pem ubuntu@52.24.168.10",
         "description": "ssh into minecraft server",
         "id": "4258ab81",
         "tags": [
