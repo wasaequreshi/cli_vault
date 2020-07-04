@@ -85,8 +85,13 @@ class cli_vault:
 
     # Implement search on existing data
     def search(self, args):
-        print (args)
-        pass
+        content = args.content if args.content else ""
+        tags = args.tags if args.tags else ""
+
+        if self.is_valid_file_path():
+            command_data = {}
+            with open(self.sv_command_file_path) as json_file:
+                command_data = json.load(json_file)
 
     # Implement automatically storing command data
 
@@ -113,7 +118,8 @@ if __name__ == "__main__":
     parser_list.set_defaults(func=sv.list_commands)
 
     parser_search = subparsers.add_parser('search', help='Search for stored commands/notes')
-    parser_search.add_argument('-t', '--text', help='Text to search for', required=True)
+    parser_search.add_argument('-c', '--content', help='Text to search for')
+    parser_search.add_argument('-t', '--tags', help='Tags to search for')
     parser_search.set_defaults(func=sv.search)
 
     args = parser.parse_args()
