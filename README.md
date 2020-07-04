@@ -64,4 +64,25 @@ wqureshi: cli-vault delete -id "4258ab81"
 Command deleted
 ```
 
-Search (not done)
+Search
+
+```sh
+wqureshi: cli-vault search  -c "what i use to ssh"
+[
+    {
+        "command": "ssh -i mc.pem ubuntu@52.24.168.12",
+        "description": "ssh into minecraft server",
+        "id": "67a9a224",
+        "tags": [
+            "minecraft",
+            "server"
+        ]
+    }
+]
+```
+
+```sh
+wqureshi: cli-vault search  -c "what i use for"
+[]
+```
+In this example we can see that those words aren't found in any of the commands stored, so it returns blank
