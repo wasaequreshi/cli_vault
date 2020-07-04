@@ -29,7 +29,7 @@ cli-vault list
 Search for a command or note based on some text
 Note: Search doesn't work
 ```sh
-cli-vault search -t <text to search for  command>
+cli-vault search -c <text to search for  command>
 ```
 
 # Examples
