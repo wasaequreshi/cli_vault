@@ -46,7 +46,7 @@ class cli_vault:
                 command_data = json.load(json_file)
                 
                 # Creating new data
-                new_data = {"id" : str(uuid.uuid4())[:8] ,"command" : command, "description" : description, "tags" : tags.split(",")}
+                new_data = {"id" : str(uuid.uuid4())[:8], "command" : command, "description" : description, "tags" : tags.split(",")}
                 
                 # Appending to loaded data
                 command_data['data'].append(new_data)
