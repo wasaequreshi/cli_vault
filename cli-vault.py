@@ -158,6 +158,43 @@ class cli_vault:
 
                 print(json.dumps(results, indent=4, sort_keys=True))
 
+    def update(self, args):
+        # Getting arguments
+        command = args.command
+        description = args.description
+        tags = args.tags
+        command_id = args.command_id
+        # Loading data
+        if self.is_valid_file_path():
+            command_data = {}
+            with open(self.sv_command_file_path) as json_file:
+                command_data = json.load(json_file)
+                
+                # Setting up data
+                new_data = []
+                id_found = False
+
+                # Checking which data to not add
+                for data in command_data['data']:
+                    if data['id'] == command_id:
+                        id_found = True
+                        if command != None:
+                            data['command'] = command
+                        if description != None:
+                            data['description'] = description
+                        if tags != None:
+                            data['tags'] = tags.split(",")
+                
+                #Write back to file
+                with open(self.sv_command_file_path, 'w') as outfile:
+                    json.dump(command_data, outfile, indent=4)
+
+                # Print if it was found or not
+                if id_found:
+                    print("Updated")
+                else:
+                    print("Invalid id")
+
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     
@@ -191,6 +228,14 @@ if __name__ == "__main__":
     parser_search.add_argument('-c', '--content', help='Text to search for')
     parser_search.add_argument('-t', '--tags', help='Tags to search for')
     parser_search.set_defaults(func=sv.search)
+
+    # Update command setup
+    parser_update = subparsers.add_parser('update', help='Allows you to update a cli command/note')
+    parser_update.add_argument('-id', '--command_id', help='command/note to delete', required=True)
+    parser_update.add_argument('-c', '--command', metavar="<command>", help='command/note to update')
+    parser_update.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search')
+    parser_update.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search')
+    parser_update.set_defaults(func=sv.update)
 
     # Running arg parser
     args = parser.parse_args()
