@@ -2,6 +2,12 @@
 
 This tool helps developers improve productivity by managing commonly used commands and notes. 
 
+# Why?
+
+Sometimes we forget a command we used in the past. You can quickly store them with this tool in case you need to reference them again. 
+
+Yes you can save this in a file or document but looking for those can take time. 
+
 # How to use
 First run the following commands:
 ```sh
