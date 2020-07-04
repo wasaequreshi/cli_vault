@@ -12,7 +12,7 @@ Yes you can save this in a file or document but looking for those can take time.
 # How to use
 First run the following commands:
 ```sh
-chmod +x cli-vault.py
+chmod +x cli_vault.py
 cp cli_vault.py /usr/local/bin/cli-vault
 ```
 
