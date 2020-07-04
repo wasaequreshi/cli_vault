@@ -154,7 +154,8 @@ class cli_vault:
                         for data in command_data['data']:
                             if tag in data['tags'] and data['id'] not in results_seen:
                                 results.append(data)
-                
+                                results_seen.append(data['id'])
+                                
                 print(json.dumps(results, indent=4, sort_keys=True))
 
 # Add argument parser to handle params and options
