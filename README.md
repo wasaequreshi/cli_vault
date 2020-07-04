@@ -6,7 +6,7 @@ This tool helps developers improve productivity by managing commonly used comman
 First run the following commands:
 ```sh
 chmod +x cli-vault.py
-mv cli-vault.py /usr/local/bin/cli-vault
+cp cli-vault.py /usr/local/bin/cli-vault
 ```
 
 Add a command or note:
