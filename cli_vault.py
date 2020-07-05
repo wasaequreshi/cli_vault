@@ -162,7 +162,7 @@ class cli_vault:
                     contents = contents.split(" ")
                     for content in contents:
                         for data in command_data['data']: 
-                            if (content in data['command'] or content in data['description'] or content in data['tags']) and data['id'] not in results_seen:
+                            if (content.lower() in data['command'].lower() or content.lower() in data['description'].lower() or content.lower() in [each_tag.lower() for each_tag in data['tags']]) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
@@ -170,7 +170,7 @@ class cli_vault:
                 if tags != "":
                     for tag in tags:
                         for data in command_data['data']:
-                            if tag in data['tags'] and data['id'] not in results_seen:
+                            if tag.lower() in [each_tag.lower() for each_tag in data['tags']] and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
