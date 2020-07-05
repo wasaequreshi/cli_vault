@@ -48,7 +48,7 @@ class cli_vault:
                 with open(self.sv_command_file_path, 'w') as outfile:
                     json.dump(command_data, outfile, indent=4)
 
-
+    # Search idea for later
     def remove_stopwords(self, text):
         nltk.download('stopwords', quiet=True)
         stopword = set(stopwords.words('english'))
@@ -56,10 +56,18 @@ class cli_vault:
         text = [word for word in text if word not in stopword]
         return ' '.join(text)
 
+    # Search idea for later
     def remove_punctuation(self, text):
         no_punct = [words for words in text if words not in string.punctuation]
         words_wo_punct = ''.join(no_punct)
         return words_wo_punct
+
+     # Validator to make sure files/config is okay to load
+    def is_valid_file_path(self):
+        if os.path.isfile(self.sv_command_file_path):
+            return True
+        else:
+            print ("Script vault dir corrupted, remove " + self.sv_dir_path)
 
     # Command to add a command/note
     def add(self, args):
@@ -127,14 +135,6 @@ class cli_vault:
                 command_data = json.load(json_file)
                 # Doing a json pretty print
                 print(json.dumps(command_data['data'], indent=4, sort_keys=True))
-
-    # Validator to make sure files/config is okay to load
-    def is_valid_file_path(self):
-        if os.path.isfile(self.sv_command_file_path):
-            return True
-        else:
-            print ("Script vault dir corrupted, remove " + self.sv_dir_path)
-
 
     # Searching for command/notes
     def search(self, args):
