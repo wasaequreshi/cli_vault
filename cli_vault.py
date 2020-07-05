@@ -62,7 +62,7 @@ class cli_vault:
         words_wo_punct = ''.join(no_punct)
         return words_wo_punct
 
-     # Validator to make sure files/config is okay to load
+    # Validator to make sure files/config is okay to load
     def is_valid_file_path(self):
         if os.path.isfile(self.sv_command_file_path):
             return True
