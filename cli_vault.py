@@ -270,7 +270,7 @@ if __name__ == "__main__":
     parser_search.add_argument('-a', '--all', help='Search for text in all (cli note, description, and tags)')
     parser_search.add_argument('-c', '--cli_note', help='Search text by cli note')
     parser_search.add_argument('-d', '--description', help='Search text by description')
-    parser_search.add_argument('-t', '--tags', help='Search text by tags (comma separated)')
+    parser_search.add_argument('-t', '--tags', help='Search by tags (comma separated)')
     parser_search.set_defaults(func=sv.search)
 
     # Update cli_note setup
