@@ -12,93 +12,93 @@ class TestCliVault(unittest.TestCase):
         self.sv = cli_vault(True)
     
     def test_add(self):
-        args = SimpleNamespace(command="command",description="description",tags="tags")
+        args = SimpleNamespace(cli_note="cli_note",description="description",tags="tags")
         self.sv.add(args)
         
-        command_data = {}
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        cli_note_data = {}
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             
             self.assertTrue(len(data) == 1)
-            self.assertTrue(data[0]['command'] == "command" and data[0]['description'] == "description" and data[0]['tags'] == ["tags"])
+            self.assertTrue(data[0]['cli_note'] == "cli_note" and data[0]['description'] == "description" and data[0]['tags'] == ["tags"])
 
-        args = SimpleNamespace(command="command1",description=None,tags="tags1")
+        args = SimpleNamespace(cli_note="cli_note1",description=None,tags="tags1")
         self.sv.add(args)
 
-        command_data = {}
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        cli_note_data = {}
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             
             self.assertTrue(len(data) == 2)
-            self.assertTrue(data[1]['command'] == "command1" and data[1]['description'] == "" and data[1]['tags'] == ["tags1"])
+            self.assertTrue(data[1]['cli_note'] == "cli_note1" and data[1]['description'] == "" and data[1]['tags'] == ["tags1"])
 
-        args = SimpleNamespace(command="command2",description=None,tags="tags1,tags2")
+        args = SimpleNamespace(cli_note="cli_note2",description=None,tags="tags1,tags2")
         self.sv.add(args)
 
-        command_data = {}
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        cli_note_data = {}
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             
             self.assertTrue(len(data) == 3)
-            self.assertTrue(data[2]['command'] == "command2" and data[2]['description'] == "" and data[2]['tags'] == ["tags1", "tags2"])
+            self.assertTrue(data[2]['cli_note'] == "cli_note2" and data[2]['description'] == "" and data[2]['tags'] == ["tags1", "tags2"])
     
     def test_delete(self):
         
-        args = SimpleNamespace(command="command",description="description",tags="tags")
+        args = SimpleNamespace(cli_note="cli_note",description="description",tags="tags")
         self.sv.add(args)
-        args = SimpleNamespace(command="command1",description=None,tags="tags1")
+        args = SimpleNamespace(cli_note="cli_note1",description=None,tags="tags1")
         self.sv.add(args)
-        args = SimpleNamespace(command="command2",description=None,tags="tags1,tags2")
+        args = SimpleNamespace(cli_note="cli_note2",description=None,tags="tags1,tags2")
         self.sv.add(args)
 
         ids = []
 
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             self.assertTrue(len(data) == 3)
 
             for d in data:
                 ids.append(d['id'])
 
-        args = SimpleNamespace(command_id=ids[0])
+        args = SimpleNamespace(cli_note_id=ids[0])
         self.sv.delete(args)
 
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             self.assertTrue(len(data) == 2)
 
     def test_update(self):
 
-        args = SimpleNamespace(command="command",description="description",tags="tags")
+        args = SimpleNamespace(cli_note="cli_note",description="description",tags="tags")
         self.sv.add(args)
-        args = SimpleNamespace(command="command1",description=None,tags="tags1")
+        args = SimpleNamespace(cli_note="cli_note1",description=None,tags="tags1")
         self.sv.add(args)
-        args = SimpleNamespace(command="command2",description=None,tags="tags1,tags2")
+        args = SimpleNamespace(cli_note="cli_note2",description=None,tags="tags1,tags2")
         self.sv.add(args)
 
         ids = []
         
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             self.assertTrue(len(data) == 3)
 
             for d in data:
                 ids.append(d['id'])
 
-        args = SimpleNamespace(command_id=ids[0], command="command19",description=None,tags=None)
+        args = SimpleNamespace(cli_note_id=ids[0], cli_note="cli_note19",description=None,tags=None)
         self.sv.update(args)
         
-        with open(os.path.join('.secure_vault', 'commands.json')) as json_file:
-            command_data = json.load(json_file)
-            data = command_data['data']
+        with open(os.path.join('.secure_vault', 'cli_notes.json')) as json_file:
+            cli_note_data = json.load(json_file)
+            data = cli_note_data['data']
             self.assertTrue(len(data) == 3)
-            self.assertTrue(data[0]['command'] == "command19" and data[0]['description'] == "description" and data[0]['tags'] == ["tags"])
+            self.assertTrue(data[0]['cli_note'] == "cli_note19" and data[0]['description'] == "description" and data[0]['tags'] == ["tags"])
 
     def tearDown(self):
         dir_path = os.path.join(".secure_vault")
