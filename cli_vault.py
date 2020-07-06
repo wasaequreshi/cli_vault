@@ -210,7 +210,7 @@ class cli_vault:
 
                 # Searching via cli_note
                 if text_cli_note != "":
-                    text_cli_note = text_cli_note.split(",")
+                    text_cli_note = text_cli_note.split(" ")
                     for cli_note in text_cli_note:
                         for data in cli_note_data['data']:
                             if cli_note.lower() in data['cli_note'].lower() and data['id'] not in results_seen:
@@ -219,7 +219,7 @@ class cli_vault:
                 
                 # Searching via description
                 if text_description != "":
-                    text_description = text_description.split(",")
+                    text_description = text_description.split(" ")
                     for description in text_description:
                         for data in cli_note_data['data']:
                             if description.lower() in data['description'].lower() and data['id'] not in results_seen:
