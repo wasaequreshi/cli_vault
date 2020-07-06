@@ -16,7 +16,7 @@ class cli_vault:
 
     # configuration setup
     sv_dir = ".secure_vault"
-    sv_command_file = "commands.json"
+    sv_cli_note_file = "cli_notes.json"
 
     # If folders and files aren't setup, then on each run make sure to do so
     def __init__(self, is_test=False):
@@ -24,29 +24,29 @@ class cli_vault:
         if not is_test:
             # Setting up directory in home and file inside that directory
             self.sv_dir_path = os.path.join(str(Path.home()), self.sv_dir)
-            self.sv_command_file_path = os.path.join(str(Path.home()), self.sv_dir, self.sv_command_file)
+            self.sv_cli_note_file_path = os.path.join(str(Path.home()), self.sv_dir, self.sv_cli_note_file)
             
             # Checking if directory exists or not, create it otherwise
             if not os.path.isdir(self.sv_dir_path):
                 os.makedirs(self.sv_dir_path)
             
             # Check if file exists of not, create it otherwise
-            if not os.path.isfile(self.sv_command_file_path):
-                command_data = {'data' : []}
-                with open(self.sv_command_file_path, 'w') as outfile:
-                    json.dump(command_data, outfile, indent=4)
+            if not os.path.isfile(self.sv_cli_note_file_path):
+                cli_note_data = {'data' : []}
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
         else:
             self.sv_dir_path = self.sv_dir
-            self.sv_command_file_path = os.path.join(self.sv_dir, self.sv_command_file)
+            self.sv_cli_note_file_path = os.path.join(self.sv_dir, self.sv_cli_note_file)
             # Checking if directory exists or not, create it otherwise
             if not os.path.isdir(self.sv_dir_path):
                 os.makedirs(self.sv_dir_path)
             
             # Check if file exists of not, create it otherwise
-            if not os.path.isfile(self.sv_command_file_path):
-                command_data = {'data' : []}
-                with open(self.sv_command_file_path, 'w') as outfile:
-                    json.dump(command_data, outfile, indent=4)
+            if not os.path.isfile(self.sv_cli_note_file_path):
+                cli_note_data = {'data' : []}
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
 
     # Search idea for later
     def remove_stopwords(self, text):
@@ -64,147 +64,97 @@ class cli_vault:
 
     # Validator to make sure files/config is okay to load
     def is_valid_file_path(self):
-        if os.path.isfile(self.sv_command_file_path):
+        if os.path.isfile(self.sv_cli_note_file_path):
             return True
         else:
             print ("Script vault dir corrupted, remove " + self.sv_dir_path)
 
-    # Command to add a command/note
+    # cli_note to add
     def add(self, args):
         # Getting arguments
-        command = args.command
+        cli_note = args.cli_note
         description = args.description if args.description else ""
         tags = args.tags if args.tags else ""
         
         # Need to check this each time, file could be corrupt which can cause program to crash
         if self.is_valid_file_path():
             # Loading data
-            with open(self.sv_command_file_path) as json_file:
-                command_data = json.load(json_file)
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
                 
                 # Creating new data
-                new_data = {"id" : str(uuid.uuid4())[:8], "command" : command, "description" : description, "tags" : tags.split(",")}
+                new_data = {"id" : str(uuid.uuid4())[:8], "cli_note" : cli_note, "description" : description, "tags" : tags.split(",")}
                 
                 # Appending to loaded data
-                command_data['data'].append(new_data)
+                cli_note_data['data'].append(new_data)
 
                 # Writing back to file
-                with open(self.sv_command_file_path, 'w') as outfile:
-                    json.dump(command_data, outfile, indent=4)
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
 
-    # Deletes a stored command/note
+    # Deletes a stored cli_note
     def delete(self, args):
         # Getting arguments
-        command_id = args.command_id
+        cli_note_id = args.cli_note_id
         # Loading data
         if self.is_valid_file_path():
-            command_data = {}
-            with open(self.sv_command_file_path) as json_file:
-                command_data = json.load(json_file)
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
                 
                 # Setting up data
                 new_data = []
                 id_found = False
 
                 # Checking which data to not add
-                for data in command_data['data']:
-                    if not data['id'] == command_id:
+                for data in cli_note_data['data']:
+                    if not data['id'] == cli_note_id:
                         new_data.append(data)
                     else:
                         id_found = True
                 
                 # Update data store
-                command_data['data'] = new_data
+                cli_note_data['data'] = new_data
                 
                 #Write back to file
-                with open(self.sv_command_file_path, 'w') as outfile:
-                    json.dump(command_data, outfile, indent=4)
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
 
                 # Print if it was found or not
                 if id_found:
-                    print("Command deleted")
+                    print("cli_note deleted")
                 else:
                     print("Invalid id")
-
-    # Similar to ls, shows all the commands stored
-    def list_commands(self, args):
-        # Just loading the file
-        if self.is_valid_file_path():
-            command_data = {}
-            with open(self.sv_command_file_path) as json_file:
-                command_data = json.load(json_file)
-                # Doing a json pretty print
-                print(json.dumps(command_data['data'], indent=4, sort_keys=True))
-
-    # Searching for command/notes
-    def search(self, args):
-        # Getting arguments 
-        contents = args.content if args.content else ""
-        
-        # Need to ask for advice on whether to keep this, this does improve 
-        # performance, but ruins accuracy :(
-        # contents = contents.split(" ")
-        # contents = self.remove_stopwords(contents)
-        # contents = self.remove_punctuation(contents)
-        
-        tags = args.tags if args.tags else ""
-        tags = tags.split(",")
-        # Loading file
-        if self.is_valid_file_path():
-            command_data = {}
-            with open(self.sv_command_file_path) as json_file:
-                command_data = json.load(json_file)
-                
-                results_seen = []
-                results = []
-                # Searching via content ind command and description
-                if contents != "":
-                    contents = contents.split(" ")
-                    for content in contents:
-                        for data in command_data['data']: 
-                            if (content.lower() in data['command'].lower() or content.lower() in data['description'].lower() or content.lower() in [each_tag.lower() for each_tag in data['tags']]) and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
-
-                # Searching via tags
-                if tags != "":
-                    for tag in tags:
-                        for data in command_data['data']:
-                            if tag.lower() in [each_tag.lower() for each_tag in data['tags']] and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
-
-                print(json.dumps(results, indent=4, sort_keys=True))
-
-    # Updating stored commands
+    
+    # Updating stored cli_note
     def update(self, args):
         # Getting arguments
-        command = args.command
+        cli_note = args.cli_note
         description = args.description
         tags = args.tags
-        command_id = args.command_id
+        cli_note_id = args.cli_note_id
         # Loading data
         if self.is_valid_file_path():
-            command_data = {}
-            with open(self.sv_command_file_path) as json_file:
-                command_data = json.load(json_file)
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
                 
                 # Setting up data
                 id_found = False
 
                 # Checking which data to update
-                for data in command_data['data']:
-                    if data['id'] == command_id:
-                        if command != None:
-                            data['command'] = command
+                for data in cli_note_data['data']:
+                    if data['id'] == cli_note_id:
+                        if cli_note != None:
+                            data['cli_note'] = cli_note
                         if description != None:
                             data['description'] = description
                         if tags != None:
                             data['tags'] = tags.split(",")
                         id_found = True
                 #Write back to file
-                with open(self.sv_command_file_path, 'w') as outfile:
-                    json.dump(command_data, outfile, indent=4)
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
 
                 # Print if it was updated or not
                 if id_found:
@@ -212,46 +162,123 @@ class cli_vault:
                 else:
                     print("Invalid id")
 
+    # Similar to ls, shows all the cli_notes stored
+    def list_cli_notes(self, args):
+        # Just loading the file
+        if self.is_valid_file_path():
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
+                # Doing a json pretty print
+                print(json.dumps(cli_note_data['data'], indent=4, sort_keys=True))
+
+    # Searching for cli_notes
+    def search(self, args):
+        # Getting arguments 
+        text_all = args.all if args.all else ""
+        text_cli_note = args.cli_note if args.cli_note else ""
+        text_description = args.description if args.description else ""
+        text_tags = args.tags if args.tags else ""
+
+        # No need to search for other flags
+        if text_all:
+            text_cli_note = ""
+            text_description = ""
+            text_tags = ""
+        # Need to ask for advice on whether to keep this, this does improve 
+        # performance, but ruins accuracy :(
+        # contents = contents.split(" ")
+        # contents = self.remove_stopwords(contents)
+        # contents = self.remove_punctuation(contents)
+        
+        # Loading file
+        if self.is_valid_file_path():
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
+                
+                results_seen = []
+                results = []
+                # Searching all
+                if text_all != "":
+                    text_all = text_all.split(" ")
+                    for word in text_all:
+                        for data in cli_note_data['data']: 
+                            if (word.lower() in data['cli_note'].lower() or word.lower() in data['description'].lower() or word.lower() in [each_tag.lower() for each_tag in data['tags']]) and data['id'] not in results_seen:
+                                results.append(data)
+                                results_seen.append(data['id'])
+
+                # Searching via cli_note
+                if text_cli_note != "":
+                    text_cli_note = text_cli_note.split(",")
+                    for cli_note in text_cli_note:
+                        for data in cli_note_data['data']:
+                            if cli_note.lower() in data['cli_note'] and data['id'] not in results_seen:
+                                results.append(data)
+                                results_seen.append(data['id'])
+                
+                # Searching via description
+                if text_description != "":
+                    text_description = text_description.split(",")
+                    for description in text_description:
+                        for data in cli_note_data['data']:
+                            if description.lower() in data['description'] and data['id'] not in results_seen:
+                                results.append(data)
+                                results_seen.append(data['id'])
+
+                # Searching via tags
+                if text_tags != "":
+                    text_tags = text_tags.split(",")
+                    for tag in text_tags:
+                        for data in cli_note_data['data']:
+                            if tag.lower() in [each_tag.lower() for each_tag in data['tags']] and data['id'] not in results_seen:
+                                results.append(data)
+                                results_seen.append(data['id'])
+
+                print(json.dumps(results, indent=4, sort_keys=True))
+
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     
     # Creating instance of class
     sv = cli_vault()
 
-    # Argument parser to handle arguments for different subcommands and flags
-    parser = argparse.ArgumentParser(prog='cli-vault', description="Store cli commands or other notes with our tool.")
+    # Argument parser to handle arguments for different subcli_notes and flags
+    parser = argparse.ArgumentParser(prog='cli_vault', description="Store cli cli_notes or other notes with our tool.")
     subparsers = parser.add_subparsers()
     subparsers.required = True
     subparsers.dest = "add, delete, list, or search"
     
-    # Add command setup
-    parser_add = subparsers.add_parser('add', help='Allows you to add a cli command/note')
-    parser_add.add_argument('-c', '--command', metavar="<command>", help='command/note to store', required=True)
-    parser_add.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search')
-    parser_add.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search')
+    # Add cli_note setup
+    parser_add = subparsers.add_parser('add', help='Allows you to add a cli cli_note/note')
+    parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store such as a cli_note or other note.', required=True)
+    parser_add.add_argument('-d', '--description', metavar="<description>", help='A short description to recall note.')
+    parser_add.add_argument('-t', '--tags', metavar="<tags comma seperated>", help='Tags to associate cli note with.')
     parser_add.set_defaults(func=sv.add)
 
-    # Delete command setup
-    parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli command/note')
-    parser_delete.add_argument('-id', '--command_id', help='command/note to delete', required=True)
+    # Delete cli_note setup
+    parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli cli_note/note')
+    parser_delete.add_argument('-id', '--cli_note_id', help='Id of cli note to delete.', required=True)
     parser_delete.set_defaults(func=sv.delete)
     
-    # List command setup
-    parser_list = subparsers.add_parser('list', help='Shows stored commands/notes')
-    parser_list.set_defaults(func=sv.list_commands)
+    # List cli_note setup
+    parser_list = subparsers.add_parser('list', help='Shows stored cli notes.')
+    parser_list.set_defaults(func=sv.list_cli_notes)
 
-    # Search command setup
-    parser_search = subparsers.add_parser('search', help='Search for stored commands/notes')
-    parser_search.add_argument('-c', '--content', help='Text to search for')
-    parser_search.add_argument('-t', '--tags', help='Tags to search for')
+    # Search cli_note setup
+    parser_search = subparsers.add_parser('search', help='Search for stored cli notes by text')
+    parser_search.add_argument('-a', '--all', help='Search for text in all (cli note, description, and tags)')
+    parser_search.add_argument('-c', '--cli_note', help='Search text by cli note')
+    parser_search.add_argument('-d', '--description', help='Search text by description')
+    parser_search.add_argument('-t', '--tags', help='Search text by tags')
     parser_search.set_defaults(func=sv.search)
 
-    # Update command setup
-    parser_update = subparsers.add_parser('update', help='Allows you to update a cli command/note')
-    parser_update.add_argument('-id', '--command_id', help='command/note to delete', required=True)
-    parser_update.add_argument('-c', '--command', metavar="<command>", help='command/note to update')
-    parser_update.add_argument('-d', '--description', metavar="<description>", help='description of the command/note. Used for search')
-    parser_update.add_argument('-t', '--tags', metavar="<tags>", help='tags of command to categorize commands. Used for search')
+    # Update cli_note setup
+    parser_update = subparsers.add_parser('update', help='Allows you to update a cli note')
+    parser_update.add_argument('-id', '--cli_note_id', help='Id of cli note to update', required=True)
+    parser_update.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to update')
+    parser_update.add_argument('-d', '--description', metavar="<description>", help='Description to update.')
+    parser_update.add_argument('-t', '--tags', metavar="<tags>", help='Tags to update.')
     parser_update.set_defaults(func=sv.update)
 
     # Running arg parser
