@@ -244,7 +244,7 @@ if __name__ == "__main__":
     sv = cli_vault()
 
     # Argument parser to handle arguments for different subcli_notes and flags
-    parser = argparse.ArgumentParser(prog='cli_vault', description="Store cli cli_notes or other notes with our tool.")
+    parser = argparse.ArgumentParser(prog='cli-vault', description="Store cli cli_notes or other notes with our tool.")
     subparsers = parser.add_subparsers()
     subparsers.required = True
     subparsers.dest = "add, delete, list, or search"
