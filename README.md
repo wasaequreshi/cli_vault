@@ -11,6 +11,7 @@ Yes you can save this in a file or document but sometimes those can be misplaced
 
 # How to use
 First run the following commands:
+
 ```sh
 chmod +x cli_vault.py
 cp cli_vault.py /usr/local/bin/cli-vault
@@ -29,6 +30,7 @@ cli-vault delete -id <cli note id>
 ```
 
 List all the cli notes stored
+
 ```sh
 cli-vault list
 ```
@@ -92,4 +94,5 @@ wqureshi: cli-vault search  -c "what i use to ssh"
 wqureshi: cli-vault search  -c "what i use for"
 []
 ```
+
 In this example we can see that those words aren't found in any of the cli notes stored, so it returns blank
