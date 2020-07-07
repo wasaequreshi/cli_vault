@@ -1,10 +1,12 @@
 import unittest
-from cli_vault import cli_vault
-from pathlib import Path
 import shutil
 import os
-from types import SimpleNamespace
 import json
+import sys
+sys.path.append(os.path.abspath(os.path.join('..', 'src')))
+from pathlib import Path
+from cli_vault import cli_vault
+from types import SimpleNamespace
 
 class TestCliVault(unittest.TestCase):
 
