@@ -13,6 +13,8 @@ Yes you can save this in a file or document but sometimes those can be misplaced
 First run the following commands:
 
 ```sh
+Install python3 on machine
+pip3 install -r requirements.txt
 chmod +x cli_vault.py
 cp cli_vault.py /usr/local/bin/cli-vault
 ```
