@@ -268,7 +268,7 @@ if __name__ == "__main__":
     parser_delete.set_defaults(func=sv.delete)
     
     # List cli_note setup
-    parser_list = subparsers.add_parser('list', help='Shows stored cli notes.')
+    parser_list = subparsers.add_parser('list', help='Shows stored cli notes')
     parser_list.set_defaults(func=sv.list_cli_notes)
 
     # Search cli_note setup
