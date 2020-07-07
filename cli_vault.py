@@ -71,7 +71,7 @@ class cli_vault:
             print ("Script vault dir corrupted, remove " + self.sv_dir_path)
 
     def pretty_print(self, cli_note_data):
-        formatted_json = json.dumps(cli_note_data['data'], indent=4, sort_keys=True)
+        formatted_json = json.dumps(cli_note_data['data'], indent=4, sort_keys=True).replace('\\"',"\"")
         colorful_json = highlight(formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter())
         print(colorful_json)
 
@@ -82,6 +82,11 @@ class cli_vault:
         description = args.description if args.description else ""
         tags = args.tags if args.tags else ""
         
+        cli_note = cli_note.replace('\\', '')
+        description = description.replace('\\', '')
+        tags = tags.replace('\\', '')
+
+        print (cli_note)
         # Need to check this each time, file could be corrupt which can cause program to crash
         if self.is_valid_file_path():
             # Loading data
@@ -139,6 +144,11 @@ class cli_vault:
         description = args.description
         tags = args.tags
         cli_note_id = args.cli_note_id
+
+        cli_note = cli_note.replace('\\', '')
+        description = description.replace('\\', '')
+        tags = tags.replace('\\', '')
+
         # Loading data
         if self.is_valid_file_path():
             cli_note_data = {}
@@ -185,6 +195,10 @@ class cli_vault:
         text_cli_note = args.cli_note if args.cli_note else ""
         text_description = args.description if args.description else ""
         text_tags = args.tags if args.tags else ""
+        
+        text_cli_note = text_cli_note.replace('\\', '')
+        text_description = text_description.replace('\\', '')
+        text_tags = text_tags.replace('\\', '')
 
         # No need to search for other flags
         if text_all:
