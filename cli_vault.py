@@ -11,6 +11,7 @@ import string
 from nltk.corpus import stopwords
 import nltk
 import string
+from pygments import highlight, lexers, formatters
 
 class cli_vault:
 
@@ -68,6 +69,11 @@ class cli_vault:
             return True
         else:
             print ("Script vault dir corrupted, remove " + self.sv_dir_path)
+
+    def pretty_print(self, cli_note_data):
+        formatted_json = json.dumps(cli_note_data['data'], indent=4, sort_keys=True)
+        colorful_json = highlight(formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter())
+        print(colorful_json)
 
     # cli_note to add
     def add(self, args):
@@ -170,7 +176,7 @@ class cli_vault:
             with open(self.sv_cli_note_file_path) as json_file:
                 cli_note_data = json.load(json_file)
                 # Doing a json pretty print
-                print(json.dumps(cli_note_data['data'], indent=4, sort_keys=True))
+                self.pretty_print(cli_note_data)
 
     # Searching for cli_notes
     def search(self, args):
@@ -235,7 +241,7 @@ class cli_vault:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
-                print(json.dumps(results, indent=4, sort_keys=True))
+                self.pretty_print({"data" : results})
 
 # Add argument parser to handle params and options
 if __name__ == "__main__":
