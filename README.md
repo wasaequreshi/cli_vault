@@ -19,82 +19,36 @@ chmod +x cli_vault.py
 cp cli_vault.py /usr/local/bin/cli-vault
 ```
 
-Add a cli note:
+## Add a cli note:
 
-```sh
-cli-vault add -c <cli note to store> -d <description of cli note, what, why, when etc> -t <tags such as "maintenance,release">
-```
+![Add Cli Note](resources/cli_vault_add.png)
 
-Delete a cli note:
+## Delete a cli note:
 
-```sh
-cli-vault delete -id <cli note id>
-```
+![Delete Cli Note](resources/cli_vault_delete.png)
 
-List all the cli notes stored
+## Update a cli note:
 
-```sh
-cli-vault list
-```
+![Delete Cli Note](resources/cli_vault_update.png)
 
-Search for a cli note based on some text
+## List all the cli notes stored:
 
-```sh
-cli-vault search -a <text to search through cli note, description, or tags> -c <search only on cli note> -d <search only on description> -t <search only on tags (comma separated)>
-```
+![List All Cli Notes](resources/cli_vault_list.png)
 
-# Examples
+## Search for notes via cli note, description, tags, or all
 
-Add
+### All:
 
-```sh
-cli-vault add -c "ssh -i mc.pem ubuntu@52.24.168.10" -d "ssh into minecraft server" -t "minecraft,server"
-```
+![Search All Cli Notes](resources/cli_vault_search_all.png)
 
-List
+### Cli Note:
 
-```sh
-wqureshi:  cli-vault list
-[
-    {
-        "cli_note": "ssh -i mc.pem ubuntu@52.24.168.10",
-        "description": "ssh into minecraft server",
-        "id": "4258ab81",
-        "tags": [
-            "minecraft",
-            "server"
-        ]
-    }
-]
-```
+![Search All Cli Notes](resources/cli_vault_search_cli_note.png)
 
-Delete
+### Description:
 
-```sh
-wqureshi: cli-vault delete -id "4258ab81" 
-Cli note deleted
-```
+![Search All Cli Notes](resources/cli_vault_search_description.png)
 
-Search
+### tags:
 
-```sh
-wqureshi: cli-vault search  -c "what i use to ssh"
-[
-    {
-        "cli_note": "ssh -i mc.pem ubuntu@52.24.168.12",
-        "description": "ssh into minecraft server",
-        "id": "67a9a224",
-        "tags": [
-            "minecraft",
-            "server"
-        ]
-    }
-]
-```
-
-```sh
-wqureshi: cli-vault search  -c "what i use for"
-[]
-```
-
-In this example we can see that those words aren't found in any of the cli notes stored, so it returns blank
+![Search All Cli Notes](resources/cli_vault_search_tags.png)
