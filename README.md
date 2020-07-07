@@ -15,8 +15,8 @@ First run the following commands:
 ```sh
 Install python3 on machine
 pip3 install -r requirements.txt
-chmod +x cli_vault.py
-cp cli_vault.py /usr/local/bin/cli-vault
+chmod +x src/cli_vault.py
+cp src/cli_vault.py /usr/local/bin/cli-vault
 ```
 
 ## Add a cli note:
