@@ -41,9 +41,9 @@ This allows you to search a text individually on cli note, description, and tags
 
 ### All:
 
-![Search All Cli Notes](resources/cli_vault_search_all.png)
-
 This is searching for 'into' and 'unique' in cli note, description, and tags.
+
+![Search All Cli Notes](resources/cli_vault_search_all.png)
 
 ### Cli Note:
 
