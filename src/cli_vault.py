@@ -128,7 +128,7 @@ class cli_vault:
 
                 # Print if it was found or not
                 if id_found:
-                    print("cli_note deleted")
+                    print("Cli note deleted")
                 else:
                     print("Invalid id")
     
@@ -250,21 +250,21 @@ if __name__ == "__main__":
     sv = cli_vault()
 
     # Argument parser to handle arguments for different subcli_notes and flags
-    parser = argparse.ArgumentParser(prog='cli-vault', description="Store cli cli_notes or other notes with our tool.")
+    parser = argparse.ArgumentParser(prog='cli-vault', description="Store cli notes or other notes with our tool")
     subparsers = parser.add_subparsers()
     subparsers.required = True
     subparsers.dest = "add, delete, list, or search"
     
     # Add cli_note setup
-    parser_add = subparsers.add_parser('add', help='Allows you to add a cli cli_note/note')
-    parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store such as a cli_note or other note.', required=True)
-    parser_add.add_argument('-d', '--description', metavar="<description>", help='A short description to recall note.')
-    parser_add.add_argument('-t', '--tags', metavar="<tags comma seperated>", help='Tags to associate cli note with.')
+    parser_add = subparsers.add_parser('add', help='Allows you to add a cli note')
+    parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store', required=True)
+    parser_add.add_argument('-d', '--description', metavar="<description>", help='A short description to recall note')
+    parser_add.add_argument('-t', '--tags', metavar="<tags comma seperated>", help='Tags to associate cli note with')
     parser_add.set_defaults(func=sv.add)
 
     # Delete cli_note setup
-    parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli cli_note/note')
-    parser_delete.add_argument('-id', '--cli_note_id', help='Id of cli note to delete.', required=True)
+    parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli note')
+    parser_delete.add_argument('-id', '--cli_note_id', help='Id of cli note to delete', required=True)
     parser_delete.set_defaults(func=sv.delete)
     
     # List cli_note setup
@@ -283,8 +283,8 @@ if __name__ == "__main__":
     parser_update = subparsers.add_parser('update', help='Allows you to update a cli note')
     parser_update.add_argument('-id', '--cli_note_id', help='Id of cli note to update', required=True)
     parser_update.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to update')
-    parser_update.add_argument('-d', '--description', metavar="<description>", help='Description to update.')
-    parser_update.add_argument('-t', '--tags', metavar="<tags comma separated>", help='Tags to update.')
+    parser_update.add_argument('-d', '--description', metavar="<description>", help='Description to update')
+    parser_update.add_argument('-t', '--tags', metavar="<tags comma separated>", help='Tags to update')
     parser_update.set_defaults(func=sv.update)
 
     # Running arg parser
