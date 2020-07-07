@@ -7,7 +7,7 @@ This tool helps developers improve productivity by managing commonly used comman
 Sometimes we forget a command we used in the past. You can quickly store them with this tool in case you need to reference them again. You can store other information 
 too such as ip addresses, api end points, links, and much more to recollect at a later time. 
 
-Yes you can save this in a file or document but sometimes those can be misplaced.
+Yes you can save this in a file or document but sometimes those can be misplaced or difficult to find.
 
 # How to use
 First run the following commands:
