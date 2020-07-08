@@ -127,8 +127,9 @@ class cli_vault:
             with open(self.sv_cli_note_file_path) as json_file:
                 cli_note_data = json.load(json_file)
                 
+                unique_id = str(uuid.uuid4())[:8]
                 # Creating new data
-                new_data = {"id" : str(uuid.uuid4())[:8], "cli_note" : cli_note, "description" : description, "tags" : tags.split(",")}
+                new_data = {"id" : unique_id, "cli_note" : cli_note, "description" : description, "tags" : tags.split(",")}
                 
                 # Appending to loaded data
                 cli_note_data['data'].append(new_data)
@@ -136,6 +137,8 @@ class cli_vault:
                 # Writing back to file
                 with open(self.sv_cli_note_file_path, 'w') as outfile:
                     json.dump(cli_note_data, outfile, indent=4)
+
+                print(unique_id + " created")
 
     # Deletes a stored cli_note
     def delete(self, args):
@@ -167,9 +170,9 @@ class cli_vault:
 
                 # Print if it was found or not
                 if id_found:
-                    print("Cli note deleted")
+                    print(cli_note_id + " deleted")
                 else:
-                    print("Invalid id")
+                    print("Invalid id: " + cli_note_id)
     
     # Updating stored cli_note
     def update(self, args):
@@ -213,9 +216,9 @@ class cli_vault:
 
                 # Print if it was updated or not
                 if id_found:
-                    print("Updated")
+                    print(cli_note_id + " updated")
                 else:
-                    print("Invalid id")
+                    print("Invalid id: " + cli_note_id)
 
     # Similar to ls, shows all the cli_notes stored
     def list_cli_notes(self, args):
