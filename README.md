@@ -195,7 +195,7 @@ This is searching for 'into' and 'unique' in cli note, description, and tags.
 
 ### Cli Note:
 
-This will only search for the terms on cli_note.
+This will only search for the terms on cli notes.
 
 ```sh
 ➜  ~ cli-vault list 
