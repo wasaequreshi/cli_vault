@@ -228,8 +228,12 @@ class cli_vault:
             cli_note_data = {}
             with open(self.sv_cli_note_file_path) as json_file:
                 cli_note_data = json.load(json_file)
-                # Doing a json pretty print
-                self.pretty_print(cli_note_data)
+                
+                if len(cli_note_data['data']) == 0:
+                    print("No results :(")
+                else:
+                    # Doing a json pretty print
+                    self.pretty_print(cli_note_data)
 
     # Searching for cli_notes
     def search(self, args):
@@ -294,7 +298,10 @@ class cli_vault:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
-                self.pretty_print({"data" : results})
+                if len(results) == 0:
+                    print("No results :(")
+                else:
+                    self.pretty_print({"data" : results})
 
 # Add argument parser to handle params and options
 if __name__ == "__main__":
