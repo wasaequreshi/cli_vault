@@ -1,13 +1,14 @@
 # What is it?
 
-This tool helps developers improve productivity by managing commonly used commands and notes. 
+This tool helps developers improve productivity by managing commonly used commands and notes on the cli. 
 
 # Why?
 
-Sometimes we forget a command we used in the past. You can quickly store them with this tool in case you need to reference them again. You can store other information 
-too such as ip addresses, api end points, links, and much more to recollect at a later time. 
+Developers store scripts and other notes in an a wide array of different places such as Google Docs, Notes, Google Keep etc. Sometimes we misplace them or have a hard time recollecting our notes. 
 
-Yes you can save this in a file or document but sometimes those can be misplaced or difficult to find.
+cli-vault allows you to manage scripts and other notes via the cli. Developers can add, delete, update, list and search scripts and notes right from the cli. cli-vault is aimed to store cli related activity so you can quickly get what you need in your current session.  
+
+This isn't just limited to cli activity. You can also store other developer information such as css syntax/notes, api endpoints, ip ranges, and other types of documentation.
 
 # How to use
 First run the following commands:
