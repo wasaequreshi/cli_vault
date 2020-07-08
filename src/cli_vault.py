@@ -12,6 +12,8 @@ from nltk.corpus import stopwords
 import nltk
 import string
 from pygments import highlight, lexers, formatters
+import tempfile
+from subprocess import call
 
 class cli_vault:
 
@@ -75,12 +77,49 @@ class cli_vault:
         colorful_json = highlight(formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter())
         print(colorful_json)
 
+    def vim_editor(self, current):
+        initial_message = current
+        tf = tempfile.NamedTemporaryFile('w+', suffix=".tmp", delete=False)
+        tf.write(initial_message)
+        tf.close()
+
+        call(['vim', tf.name])
+
+        tf = open(tf.name, 'r')
+        edited_message = tf.readlines()
+        edited_message = [e_message.strip("\n") for e_message in edited_message]
+        edited_message = ' '.join(edited_message)
+        
+        tf.close()
+
+        os.unlink(tf.name)
+
+        return edited_message
+
+    def vim(self, cli_note, description, tags):
+
+        cli_note = self.vim_editor("<cli note>" if cli_note == "" else cli_note)
+        description = self.vim_editor("<description>" if description == "" else description)
+        tags = self.vim_editor("<tags comma separated>" if tags == "" else ','.join(tags))
+
+        return cli_note, description, tags
+    
+    def vim_add(self, cli_note, description, tags):
+        return self.vim(cli_note, description, tags.split(","))
+
+    def vim_update(self, cli_note, description, tags):
+        return self.vim(cli_note, description, tags)
+
     # cli_note to add
     def add(self, args):
         # Getting arguments
-        cli_note = args.cli_note
+        cli_note = args.cli_note if args.cli_note else ""
         description = args.description if args.description else ""
         tags = args.tags if args.tags else ""
+        
+        # If all blank, open vim for each
+        if cli_note == "":
+            cli_note, description, tags = self.vim_add(cli_note, description, tags)
         
         # Need to check this each time, file could be corrupt which can cause program to crash
         if self.is_valid_file_path():
@@ -139,6 +178,16 @@ class cli_vault:
         description = args.description
         tags = args.tags
         cli_note_id = args.cli_note_id
+
+        if cli_note == None and description == None and tags == None:
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
+                # Checking which data to update
+                for data in cli_note_data['data']:
+                    if data['id'] == cli_note_id:
+                        cli_note, description, tags = self.vim_update(data['cli_note'], data['description'], data['tags'])
+
         # Loading data
         if self.is_valid_file_path():
             cli_note_data = {}
@@ -257,7 +306,7 @@ if __name__ == "__main__":
     
     # Add cli_note setup
     parser_add = subparsers.add_parser('add', help='Allows you to add a cli note')
-    parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store', required=True)
+    parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store')
     parser_add.add_argument('-d', '--description', metavar="<description>", help='A short description to recall note')
     parser_add.add_argument('-t', '--tags', metavar="<tags comma seperated>", help='Tags to associate cli note with')
     parser_add.set_defaults(func=sv.add)
