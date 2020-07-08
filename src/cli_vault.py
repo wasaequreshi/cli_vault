@@ -72,11 +72,13 @@ class cli_vault:
         else:
             print ("Script vault dir corrupted, remove " + self.sv_dir_path)
 
+    # pretty print results from list and search
     def pretty_print(self, cli_note_data):
         formatted_json = json.dumps(cli_note_data['data'], indent=4, sort_keys=True)
         colorful_json = highlight(formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter())
         print(colorful_json)
 
+    # Open up editor to add/update notes
     def vim_editor(self, current):
         initial_message = current
         tf = tempfile.NamedTemporaryFile('w+', suffix=".tmp", delete=False)
@@ -96,6 +98,7 @@ class cli_vault:
 
         return edited_message
 
+    # Processes input before passing to editor
     def vim(self, cli_note, description, tags):
 
         cli_note = self.vim_editor("<cli note>" if cli_note == "" else cli_note)
@@ -104,9 +107,11 @@ class cli_vault:
 
         return cli_note, description, tags
     
+    # editor for adding note
     def vim_add(self, cli_note, description, tags):
         return self.vim(cli_note, description, tags)
 
+    # editor for updating note
     def vim_update(self, cli_note, description, tags):
         return self.vim(cli_note, description, ','.join(tags))
 
