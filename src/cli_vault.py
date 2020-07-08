@@ -144,6 +144,7 @@ class cli_vault:
     def delete(self, args):
         # Getting arguments
         cli_note_id = args.cli_note_id
+
         # Loading data
         if self.is_valid_file_path():
             cli_note_data = {}
@@ -316,7 +317,7 @@ if __name__ == "__main__":
 
     # Delete cli_note setup
     parser_delete = subparsers.add_parser('delete', help='Allows you to remote a cli note')
-    parser_delete.add_argument('-id', '--cli_note_id', help='Id of cli note to delete', required=True)
+    parser_delete.add_argument('cli_note_id', help='Id of cli note to delete')
     parser_delete.set_defaults(func=sv.delete)
     
     # List cli_note setup
@@ -333,7 +334,7 @@ if __name__ == "__main__":
 
     # Update cli_note setup
     parser_update = subparsers.add_parser('update', help='Allows you to update a cli note')
-    parser_update.add_argument('-id', '--cli_note_id', help='Id of cli note to update', required=True)
+    parser_update.add_argument('cli_note_id', help='Id of cli note to update')
     parser_update.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to update')
     parser_update.add_argument('-d', '--description', metavar="<description>", help='Description to update')
     parser_update.add_argument('-t', '--tags', metavar="<tags comma separated>", help='Tags to update')
