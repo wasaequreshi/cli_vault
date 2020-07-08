@@ -40,6 +40,14 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 ]
 ```
 
+### via vim
+
+```sh
+➜  ~ cli-vault add
+```
+
+You'll be prompted via vim to input the cli note, description, and tags.
+
 ## Delete a cli note:
 
 ```sh
@@ -95,6 +103,26 @@ No results :(
     }
 ]
 ```
+
+### via vim
+
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key"
+        ]
+    }
+]
+➜  ~ cli-vault update 83e9f9d1
+```
+
+You'll be prompted via vim to update the cli note, description, and tags.
 
 ## List all the cli notes stored:
 
