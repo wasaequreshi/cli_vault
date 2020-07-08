@@ -26,7 +26,7 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 
 ### via vim
 
-<add gif here>
+![](resources/vim_add.gif)
 
 ## Delete a cli note:
 
@@ -39,7 +39,7 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 
 ### via vim
 
-<add gif here>
+![](resources/vim_update.gif)
 
 ## List all the cli notes stored:
 
