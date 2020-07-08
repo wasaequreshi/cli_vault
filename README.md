@@ -21,7 +21,12 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 
 ## Add a cli note:
 
+### via cli
 ![Add Cli Note](resources/cli_vault_add.png)
+
+### via vim
+
+<add gif here>
 
 ## Delete a cli note:
 
@@ -29,7 +34,12 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 
 ## Update a cli note:
 
+### via cli
 ![Delete Cli Note](resources/cli_vault_update.png)
+
+### via vim
+
+<add gif here>
 
 ## List all the cli notes stored:
 
