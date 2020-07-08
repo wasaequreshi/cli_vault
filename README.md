@@ -22,28 +22,96 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 ## Add a cli note:
 
 ### via cli
-![Add Cli Note](resources/cli_vault_add.png)
 
-### via vim
-
-![](resources/vim_add.gif)
+```sh
+➜  ~ cli-vault add -c "ssh -i my_private_key ubuntu@localhost" -d "ssh into server with private key" -t "ssh,private key"
+9e9e5793 created
+➜  ~ cli-vault list
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "9e9e5793",
+        "tags": [
+            "ssh",
+            "private key"
+        ]
+    }
+]
+```
 
 ## Delete a cli note:
 
-![Delete Cli Note](resources/cli_vault_delete.png)
+```sh
+➜  ~ cli-vault list
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "9e9e5793",
+        "tags": [
+            "ssh",
+            "private key"
+        ]
+    }
+]
+
+➜  ~ cli-vault delete 9e9e5793 
+9e9e5793 deleted
+➜  ~ cli-vault list 
+No results :(
+```
 
 ## Update a cli note:
 
 ### via cli
-![Delete Cli Note](resources/cli_vault_update.png)
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key"
+        ]
+    }
+]
 
-### via vim
-
-![](resources/vim_update.gif)
+➜  ~ cli-vault update 83e9f9d1 -c "ssh -i my_private_key ubuntu@remotehost" -d "ssh into remote server with private key" -t "ssh,private key,remote"
+83e9f9d1 updated
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "remote"
+        ]
+    }
+]
+```
 
 ## List all the cli notes stored:
 
-![List All Cli Notes](resources/cli_vault_list.png)
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key"
+        ]
+    }
+]
+```
 
 ## Search for notes via cli note, description, tags, or all
 
@@ -53,22 +121,157 @@ This allows you to search a text individually on cli note, description, and tags
 
 This is searching for 'into' and 'unique' in cli note, description, and tags.
 
-![Search All Cli Notes](resources/cli_vault_search_all.png)
+```sh
+➜  ~ cli-vault search -a my_private_key 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -a into 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -a unique 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+```
 
 ### Cli Note:
 
 This will only search for the terms on cli_note.
 
-![Search All Cli Notes](resources/cli_vault_search_cli_note.png)
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -c my_private_key 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -c unique 
+No results :(
+```
 
 ### Description:
 
 This will only search for the terms on description.
 
-![Search All Cli Notes](resources/cli_vault_search_description.png)
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -d into 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -d unique 
+No results :(
+```
 
 ### Tags:
 
 This will only search for the terms on tags.
 
-![Search All Cli Notes](resources/cli_vault_search_tags.png)
+```sh
+➜  ~ cli-vault list 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -t unique 
+[
+    {
+        "cli_note": "ssh -i my_private_key ubuntu@localhost",
+        "description": "ssh into server with private key",
+        "id": "83e9f9d1",
+        "tags": [
+            "ssh",
+            "private key",
+            "unique"
+        ]
+    }
+]
+
+➜  ~ cli-vault search -t into 
+No results :(
+```
