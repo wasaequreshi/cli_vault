@@ -12,8 +12,9 @@ Yes you can save this in a file or document but sometimes those can be misplaced
 # How to use
 First run the following commands:
 
+Make sure you have python3 installed on the machine
+
 ```sh
-Install python3 on machine
 pip3 install -r requirements.txt
 chmod +x src/cli_vault.py
 cp src/cli_vault.py /usr/local/bin/cli-vault
