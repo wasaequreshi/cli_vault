@@ -174,12 +174,12 @@ class cli_vault:
     # Updating stored cli_note
     def update(self, args):
         # Getting arguments
-        cli_note = args.cli_note if args.cli_note else ""
-        description = args.description if args.description else ""
-        tags = args.tags if args.tags else "" 
+        cli_note = args.cli_note
+        description = args.description
+        tags = args.tags
         cli_note_id = args.cli_note_id
 
-        if cli_note == "" and description == "" and tags == "":
+        if cli_note == None and description == None and tags == None:
             cli_note_data = {}
             with open(self.sv_cli_note_file_path) as json_file:
                 cli_note_data = json.load(json_file)
