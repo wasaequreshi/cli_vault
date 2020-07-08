@@ -100,15 +100,15 @@ class cli_vault:
 
         cli_note = self.vim_editor("<cli note>" if cli_note == "" else cli_note)
         description = self.vim_editor("<description>" if description == "" else description)
-        tags = self.vim_editor("<tags comma separated>" if tags == "" else ','.join(tags))
+        tags = self.vim_editor("<tags comma separated>" if tags == "" else tags)
 
         return cli_note, description, tags
     
     def vim_add(self, cli_note, description, tags):
-        return self.vim(cli_note, description, tags.split(","))
+        return self.vim(cli_note, description, tags)
 
     def vim_update(self, cli_note, description, tags):
-        return self.vim(cli_note, description, tags)
+        return self.vim(cli_note, description, ','.join(tags))
 
     # cli_note to add
     def add(self, args):
