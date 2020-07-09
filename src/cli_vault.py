@@ -82,7 +82,7 @@ class cli_vault:
     def vim_editor(self, current):
         initial_message = current
         tf = tempfile.NamedTemporaryFile('w+', suffix=".tmp", delete=False)
-        tf.write(initial_message)
+        tf.write('\n'.join(initial_message))
         tf.close()
 
         call(['vim', tf.name])
@@ -90,30 +90,33 @@ class cli_vault:
         tf = open(tf.name, 'r')
         edited_message = tf.readlines()
         edited_message = [e_message.strip("\n") for e_message in edited_message]
-        edited_message = ' '.join(edited_message)
-        
+
         tf.close()
 
         os.unlink(tf.name)
 
         return edited_message
 
+    # get all words to check and lower them
+    def lower_words(self, data):
+        all_words = ""
+        
+        # loop through each word
+        for each_data in data:
+            # If spaces, split at those and add indepedently
+            each_data = each_data.split(" ")
+            for word in each_data:
+                all_words += word.lower()
+        return all_words
+
     # Processes input before passing to editor
     def vim(self, cli_note, description, tags):
 
-        cli_note = self.vim_editor("<cli note>" if cli_note == "" else cli_note)
-        description = self.vim_editor("<description>" if description == "" else description)
-        tags = self.vim_editor("<tags comma separated>" if tags == "" else tags)
+        cli_note = self.vim_editor(["<cli note>"] if cli_note == "" else cli_note)
+        description = self.vim_editor(["<description>"] if description == "" else description)
+        tags = self.vim_editor(["<tags comma separated when passing via cli. If in vim, enter additional tags on new line>"] if tags == "" else tags)
 
         return cli_note, description, tags
-    
-    # editor for adding note
-    def vim_add(self, cli_note, description, tags):
-        return self.vim(cli_note, description, tags)
-
-    # editor for updating note
-    def vim_update(self, cli_note, description, tags):
-        return self.vim(cli_note, description, ','.join(tags))
 
     # cli_note to add
     def add(self, args):
@@ -121,10 +124,19 @@ class cli_vault:
         cli_note = args.cli_note if args.cli_note else ""
         description = args.description if args.description else ""
         tags = args.tags if args.tags else ""
+
+        # If it isn't blank, split at new line
+        cli_note = cli_note.split("\\n")
+
+        # If it isn't blank, split at new line
+        description = description.split("\\n") 
+
+        # If it isn't blank, split at comma, this stays the same
+        tags = tags.split(",")
         
         # If all blank, open vim for each
-        if cli_note == "":
-            cli_note, description, tags = self.vim_add(cli_note, description, tags)
+        if cli_note == [""]:
+            cli_note, description, tags = self.vim(cli_note, description, tags)
         
         # Need to check this each time, file could be corrupt which can cause program to crash
         if self.is_valid_file_path():
@@ -134,7 +146,7 @@ class cli_vault:
                 
                 unique_id = str(uuid.uuid4())[:8]
                 # Creating new data
-                new_data = {"id" : unique_id, "cli_note" : cli_note, "description" : description, "tags" : tags.split(",")}
+                new_data = {"id" : unique_id, "cli_note" : cli_note, "description" : description, "tags" : tags}
                 
                 # Appending to loaded data
                 cli_note_data['data'].append(new_data)
@@ -188,6 +200,18 @@ class cli_vault:
         tags = args.tags
         cli_note_id = args.cli_note_id
 
+        # If it isn't blank, split at new line
+        if cli_note != None:
+            cli_note = cli_note.split("\\n")
+
+        # If it isn't blank, split at new line
+        if description != None:
+            description = description.split("\\n") 
+
+        # If it isn't blank, split at new line
+        if tags != None:
+            tags = tags.split(",")
+
         if cli_note == None and description == None and tags == None:
             cli_note_data = {}
             with open(self.sv_cli_note_file_path) as json_file:
@@ -195,7 +219,7 @@ class cli_vault:
                 # Checking which data to update
                 for data in cli_note_data['data']:
                     if data['id'] == cli_note_id:
-                        cli_note, description, tags = self.vim_update(data['cli_note'], data['description'], data['tags'])
+                        cli_note, description, tags = self.vim(data['cli_note'], data['description'], data['tags'])
 
         # Loading data
         if self.is_valid_file_path():
@@ -214,7 +238,7 @@ class cli_vault:
                         if description != None:
                             data['description'] = description
                         if tags != None:
-                            data['tags'] = tags.split(",")
+                            data['tags'] = tags
                         id_found = True
                 #Write back to file
                 with open(self.sv_cli_note_file_path, 'w') as outfile:
@@ -272,7 +296,7 @@ class cli_vault:
                     text_all = text_all.split(" ")
                     for word in text_all:
                         for data in cli_note_data['data']: 
-                            if (word.lower() in data['cli_note'].lower() or word.lower() in data['description'].lower() or word.lower() in [each_tag.lower() for each_tag in data['tags']]) and data['id'] not in results_seen:
+                            if (word.lower() in self.lower_words(data['cli_note']) or word.lower() in self.lower_words(data['description']) or word.lower() in self.lower_words(data['tags'])) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
@@ -281,7 +305,7 @@ class cli_vault:
                     text_cli_note = text_cli_note.split(" ")
                     for cli_note in text_cli_note:
                         for data in cli_note_data['data']:
-                            if cli_note.lower() in data['cli_note'].lower() and data['id'] not in results_seen:
+                            if cli_note.lower() in self.lower_words(data['cli_note']) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
                 
@@ -290,7 +314,7 @@ class cli_vault:
                     text_description = text_description.split(" ")
                     for description in text_description:
                         for data in cli_note_data['data']:
-                            if description.lower() in data['description'].lower() and data['id'] not in results_seen:
+                            if description.lower() in self.lower_words(data['description']) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
@@ -299,7 +323,7 @@ class cli_vault:
                     text_tags = text_tags.split(",")
                     for tag in text_tags:
                         for data in cli_note_data['data']:
-                            if tag.lower() in [each_tag.lower() for each_tag in data['tags']] and data['id'] not in results_seen:
+                            if tag.lower() in self.lower_words(data['tags']) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
@@ -324,7 +348,7 @@ if __name__ == "__main__":
     parser_add = subparsers.add_parser('add', help='Allows you to add a cli note')
     parser_add.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to store')
     parser_add.add_argument('-d', '--description', metavar="<description>", help='A short description to recall note')
-    parser_add.add_argument('-t', '--tags', metavar="<tags comma seperated>", help='Tags to associate cli note with')
+    parser_add.add_argument('-t', '--tags', metavar="<tags comma separated when passing via cli>", help='Tags to associate cli note with')
     parser_add.set_defaults(func=sv.add)
 
     # Delete cli_note setup
@@ -341,7 +365,7 @@ if __name__ == "__main__":
     parser_search.add_argument('-a', '--all', help='Search for text in all (cli note, description, and tags)')
     parser_search.add_argument('-c', '--cli_note', help='Search text by cli note')
     parser_search.add_argument('-d', '--description', help='Search text by description')
-    parser_search.add_argument('-t', '--tags', help='Search by tags (comma separated)')
+    parser_search.add_argument('-t', '--tags', help='Search by tags (comma separated when passing via cli)')
     parser_search.set_defaults(func=sv.search)
 
     # Update cli_note setup
@@ -349,7 +373,7 @@ if __name__ == "__main__":
     parser_update.add_argument('cli_note_id', help='Id of cli note to update')
     parser_update.add_argument('-c', '--cli_note', metavar="<cli note>", help='Cli note to update')
     parser_update.add_argument('-d', '--description', metavar="<description>", help='Description to update')
-    parser_update.add_argument('-t', '--tags', metavar="<tags comma separated>", help='Tags to update')
+    parser_update.add_argument('-t', '--tags', metavar="<tags comma separated when passing via cli>", help='Tags to update')
     parser_update.set_defaults(func=sv.update)
 
     # Running arg parser
