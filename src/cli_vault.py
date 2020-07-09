@@ -274,9 +274,9 @@ class cli_vault:
 
         # No need to search for other flags
         if text_all:
-            text_cli_note = ""
-            text_description = ""
-            text_tags = ""
+            text_cli_note = [""]
+            text_description = [""]
+            text_tags = [""]
         # Need to ask for advice on whether to keep this, this does improve 
         # performance, but ruins accuracy :(
         # contents = contents.split(" ")
@@ -292,7 +292,7 @@ class cli_vault:
                 results_seen = []
                 results = []
                 # Searching all
-                if text_all != "":
+                if text_all != [""]:
                     text_all = text_all.split(" ")
                     for word in text_all:
                         for data in cli_note_data['data']: 
@@ -301,7 +301,7 @@ class cli_vault:
                                 results_seen.append(data['id'])
 
                 # Searching via cli_note
-                if text_cli_note != "":
+                if text_cli_note != [""]:
                     text_cli_note = text_cli_note.split(" ")
                     for cli_note in text_cli_note:
                         for data in cli_note_data['data']:
@@ -310,7 +310,7 @@ class cli_vault:
                                 results_seen.append(data['id'])
                 
                 # Searching via description
-                if text_description != "":
+                if text_description != [""]:
                     text_description = text_description.split(" ")
                     for description in text_description:
                         for data in cli_note_data['data']:
@@ -319,7 +319,7 @@ class cli_vault:
                                 results_seen.append(data['id'])
 
                 # Searching via tags
-                if text_tags != "":
+                if text_tags != [""]:
                     text_tags = text_tags.split(",")
                     for tag in text_tags:
                         for data in cli_note_data['data']:
