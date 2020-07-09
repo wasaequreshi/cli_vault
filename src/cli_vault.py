@@ -111,7 +111,6 @@ class cli_vault:
 
     # Processes input before passing to editor
     def vim(self, cli_note, description, tags):
-        print (cli_note)
         cli_note = self.vim_editor(["<cli note>"] if cli_note == [""] else cli_note)
         description = self.vim_editor(["<description>"] if description == [""] else description)
         tags = self.vim_editor(["<tags comma separated when passing via cli. If in vim, enter additional tags on new line>"] if tags == [""] else tags)
