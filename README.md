@@ -1,4 +1,4 @@
-# cli_vault
+# CLI Vault
 
 [![Build Status](https://api.travis-ci.org/wasaequreshi/cli_vault.svg?branch=master)](https://travis-ci.org/wasaequreshi/cli_vault)
 
