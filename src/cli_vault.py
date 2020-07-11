@@ -139,7 +139,7 @@ class cli_vault:
         return results, results_seen
 
     # cli_note to add
-    def add(self, args):
+    def _add(self, args):
         # Getting arguments
         cli_note = args.cli_note if args.cli_note else ""
         description = args.description if args.description else ""
@@ -175,10 +175,14 @@ class cli_vault:
                 with open(self.sv_cli_note_file_path, 'w') as outfile:
                     json.dump(cli_note_data, outfile, indent=4)
 
-                print(unique_id + " created")
+                return unique_id
+
+    def add(self, args):
+        unique_id = self._add(args)
+        print(unique_id + " created")
 
     # Deletes a stored cli_note
-    def delete(self, args):
+    def _delete(self, args):
         # Getting arguments
         cli_note_id = args.cli_note_id
 
@@ -206,14 +210,18 @@ class cli_vault:
                 with open(self.sv_cli_note_file_path, 'w') as outfile:
                     json.dump(cli_note_data, outfile, indent=4)
 
-                # Print if it was found or not
-                if id_found:
-                    print(cli_note_id + " deleted")
-                else:
-                    print("Invalid id: " + cli_note_id)
+                return id_found, cli_note_id
     
+    def delete(self, args):
+        id_found, cli_note_id = self._delete(args)
+        # Print if it was found or not
+        if id_found:
+            print(cli_note_id + " deleted")
+        else:
+            print("Invalid id: " + cli_note_id)
+
     # Updating stored cli_note
-    def update(self, args):
+    def _update(self, args):
         # Getting arguments
         cli_note = args.cli_note
         description = args.description
@@ -240,35 +248,40 @@ class cli_vault:
                 for data in cli_note_data['data']:
                     if data['id'] == cli_note_id:
                         cli_note, description, tags = self.vim(data['cli_note'], data['description'], data['tags'])
+        else:
+            # Loading data
+            if self.is_valid_file_path():
+                cli_note_data = {}
+                with open(self.sv_cli_note_file_path) as json_file:
+                    cli_note_data = json.load(json_file)
+                    
+                    # Setting up data
+                    id_found = False
 
-        # Loading data
-        if self.is_valid_file_path():
-            cli_note_data = {}
-            with open(self.sv_cli_note_file_path) as json_file:
-                cli_note_data = json.load(json_file)
-                
-                # Setting up data
-                id_found = False
+                    # Checking which data to update
+                    for data in cli_note_data['data']:
+                        if data['id'] == cli_note_id:
+                            if cli_note != None:
+                                data['cli_note'] = cli_note
+                            if description != None:
+                                data['description'] = description
+                            if tags != None:
+                                data['tags'] = tags
+                            id_found = True
+                    #Write back to file
+                    with open(self.sv_cli_note_file_path, 'w') as outfile:
+                        json.dump(cli_note_data, outfile, indent=4)
 
-                # Checking which data to update
-                for data in cli_note_data['data']:
-                    if data['id'] == cli_note_id:
-                        if cli_note != None:
-                            data['cli_note'] = cli_note
-                        if description != None:
-                            data['description'] = description
-                        if tags != None:
-                            data['tags'] = tags
-                        id_found = True
-                #Write back to file
-                with open(self.sv_cli_note_file_path, 'w') as outfile:
-                    json.dump(cli_note_data, outfile, indent=4)
+                    return id_found, cli_note_id
 
-                # Print if it was updated or not
-                if id_found:
-                    print(cli_note_id + " updated")
-                else:
-                    print("Invalid id: " + cli_note_id)
+    def update(self, args):
+        id_found, cli_note_id = self._update(args)
+
+        # Print if it was updated or not
+        if id_found:
+            print(cli_note_id + " updated")
+        else:
+            print("Invalid id: " + cli_note_id)
 
     # Similar to ls, shows all the cli_notes stored
     def _list_cli_notes(self, args):
@@ -309,7 +322,6 @@ class cli_vault:
         # If no flags passed, will search through all
         if not (text_all or text_cli_note or text_description or text_tags):
             text_all = True
-            print("No flags passed, searching through all.")
         
         # Loading file
         if self.is_valid_file_path():
@@ -339,6 +351,15 @@ class cli_vault:
 
     # separated into two functions to test results
     def search(self, args):
+        text_all = args.a
+        text_cli_note = args.c
+        text_description = args.d
+        text_tags = args.t
+        
+        # If no flags passed, will search through all
+        if not (text_all or text_cli_note or text_description or text_tags):
+            print("No flags passed, searching through all.")
+
         results = self._search(args)
 
          # Printing proper message
