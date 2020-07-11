@@ -266,16 +266,21 @@ class cli_vault:
     # Searching for cli_notes
     def search(self, args):
         # Getting arguments 
-        text_all = args.all if args.all else ""
-        text_cli_note = args.cli_note if args.cli_note else ""
-        text_description = args.description if args.description else ""
-        text_tags = args.tags if args.tags else ""
-
+        text_all = args.a
+        text_cli_note = args.c
+        text_description = args.d
+        text_tags = args.t
+        text = args.text
+        
         # No need to search for other flags
         if text_all:
-            text_cli_note = [""]
-            text_description = [""]
-            text_tags = [""]
+            text_cli_note = False
+            text_description = False
+            text_tags = False
+        
+        if not (text_all or text_cli_note or text_description or text_tags):
+            text_all = True
+            print("No flags passed, searching through all.")
         # Need to ask for advice on whether to keep this, this does improve 
         # performance, but ruins accuracy :(
         # contents = contents.split(" ")
@@ -291,36 +296,36 @@ class cli_vault:
                 results_seen = []
                 results = []
                 # Searching all
-                if text_all != [""]:
-                    text_all = text_all.split(" ")
-                    for word in text_all:
+                if text_all:
+                    text = text.split(" ")
+                    for word in text:
                         for data in cli_note_data['data']: 
                             if (word.lower() in self.lower_words(data['cli_note']) or word.lower() in self.lower_words(data['description']) or word.lower() in self.lower_words(data['tags'])) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
                 # Searching via cli_note
-                if text_cli_note != [""]:
-                    text_cli_note = text_cli_note.split(" ")
-                    for cli_note in text_cli_note:
+                if text_cli_note:
+                    text = text.split(" ")
+                    for cli_note in text:
                         for data in cli_note_data['data']:
                             if cli_note.lower() in self.lower_words(data['cli_note']) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
                 
                 # Searching via description
-                if text_description != [""]:
-                    text_description = text_description.split(" ")
-                    for description in text_description:
+                if text_description:
+                    text = text.split(" ")
+                    for description in text:
                         for data in cli_note_data['data']:
                             if description.lower() in self.lower_words(data['description']) and data['id'] not in results_seen:
                                 results.append(data)
                                 results_seen.append(data['id'])
 
                 # Searching via tags
-                if text_tags != [""]:
-                    text_tags = text_tags.split(",")
-                    for tag in text_tags:
+                if text_tags:
+                    text = text.split(",")
+                    for tag in text:
                         for data in cli_note_data['data']:
                             if tag.lower() in self.lower_words(data['tags']) and data['id'] not in results_seen:
                                 results.append(data)
@@ -361,10 +366,11 @@ if __name__ == "__main__":
 
     # Search cli_note setup
     parser_search = subparsers.add_parser('search', help='Search for stored cli notes by text')
-    parser_search.add_argument('-a', '--all', help='Search for text in all (cli note, description, and tags)')
-    parser_search.add_argument('-c', '--cli_note', help='Search text by cli note')
-    parser_search.add_argument('-d', '--description', help='Search text by description')
-    parser_search.add_argument('-t', '--tags', help='Search by tags (comma separated when passing via cli)')
+    parser_search.add_argument('text', help='Id of cli note to update')
+    parser_search.add_argument('-a', action='store_true', help='Search for text in all (cli note, description, and tags)')
+    parser_search.add_argument('-c', action='store_true', help='Search text by cli note')
+    parser_search.add_argument('-d', action='store_true', help='Search text by description')
+    parser_search.add_argument('-t', action='store_true', help='Search by tags (comma separated when passing via cli)')
     parser_search.set_defaults(func=sv.search)
 
     # Update cli_note setup
