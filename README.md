@@ -176,7 +176,7 @@ This allows you to search a text individually on cli note, description, and tags
 This is searching for 'into' and 'unique' in cli note, description, and tags.
 
 ```sh
-➜  ~ cli-vault search -a my_private_key 
+➜  ~ cli-vault search my_private_key 
 [
     {
         "cli_note": [
@@ -194,7 +194,7 @@ This is searching for 'into' and 'unique' in cli note, description, and tags.
     }
 ]
 
-➜  ~ cli-vault search -a into 
+➜  ~ cli-vault search into 
 [
     {
         "cli_note": [
@@ -212,7 +212,7 @@ This is searching for 'into' and 'unique' in cli note, description, and tags.
     }
 ]
 
-➜  ~ cli-vault search -a unique 
+➜  ~ cli-vault search unique -a 
 [
     {
         "cli_note": [
@@ -230,6 +230,8 @@ This is searching for 'into' and 'unique' in cli note, description, and tags.
     }
 ]
 ```
+
+By default, if no flags are passed, it will search all. In the last example the -a is unnecessary.
 
 ### Cli Note:
 
@@ -254,7 +256,7 @@ This will only search for the terms on cli notes.
     }
 ]
 
-➜  ~ cli-vault search -c my_private_key 
+➜  ~ cli-vault search my_private_key -c
 [
     {
         "cli_note": [
@@ -272,7 +274,7 @@ This will only search for the terms on cli notes.
     }
 ]
 
-➜  ~ cli-vault search -c unique 
+➜  ~ cli-vault search unique -c 
 No results :(
 ```
 
@@ -299,7 +301,7 @@ This will only search for the terms on description.
     }
 ]
 
-➜  ~ cli-vault search -d into 
+➜  ~ cli-vault search into -d 
 [
     {
         "cli_note": [
@@ -317,7 +319,7 @@ This will only search for the terms on description.
     }
 ]
 
-➜  ~ cli-vault search -d unique 
+➜  ~ cli-vault search unique -d 
 No results :(
 ```
 
@@ -344,7 +346,7 @@ This will only search for the terms on tags.
     }
 ]
 
-➜  ~ cli-vault search -t unique 
+➜  ~ cli-vault search unique -t 
 [
     {
         "cli_note": [
@@ -362,6 +364,6 @@ This will only search for the terms on tags.
     }
 ]
 
-➜  ~ cli-vault search -t into 
+➜  ~ cli-vault search into -t 
 No results :(
 ```
