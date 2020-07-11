@@ -57,7 +57,45 @@ cp src/cli_vault.py /usr/local/bin/cli-vault
 ➜  ~ cli-vault add
 ```
 
-You'll be prompted via vim to input the cli note, description, and tags.
+You will be prompted in vim to add a cli note.
+
+```sh
+<cli note>
+~
+~
+~
+...
+:
+```
+
+Press "esc" and type ":wq" to save and quit. You will then be prompted to add a description in vim.
+
+```sh
+<description>
+~
+~
+~
+...
+:
+```
+
+Press "esc" and type ":wq" to save and quit. You will finally be prompted to tags in vim.
+
+```sh
+<tags comma separated when passing via cli. If in vim, enter additional tags on new line>
+~
+~
+~
+...
+:
+```
+
+Once completed, it should create a cli note.
+
+```sh
+➜  ~ cli-vault add
+9e9e5793 created
+```
 
 ## Delete a cli note:
 
@@ -130,26 +168,50 @@ No results :(
 ### via vim
 
 ```sh
-➜  ~ cli-vault list 
-[
-    {
-        "cli_note": [
-            "ssh -i my_private_key ubuntu@localhost",
-        ]
-        "description": [
-            "ssh into server with private key",
-        ]
-        "id": "83e9f9d1",
-        "tags": [
-            "ssh",
-            "private key"
-        ]
-    }
-]
 ➜  ~ cli-vault update 83e9f9d1
 ```
 
-You'll be prompted via vim to update the cli note, description, and tags.
+You will be prompted in vim to update a cli note.
+
+```sh
+ssh -i my_private_key ubuntu@localhost
+~
+~
+~
+...
+:
+```
+
+Press "esc" and type ":wq" to save and quit. You will then be prompted to update a description in vim.
+
+```sh
+ssh into server with private key
+~
+~
+~
+...
+:
+```
+
+Press "esc" and type ":wq" to save and quit. You will finally be prompted to update tags in vim.
+
+```sh
+ssh
+private key
+remote
+~
+~
+~
+...
+:
+```
+
+Once completed, it should update the cli note.
+
+```sh
+➜  ~ cli-vault update
+83e9f9d1 updated
+```
 
 ## List all the cli notes stored:
 

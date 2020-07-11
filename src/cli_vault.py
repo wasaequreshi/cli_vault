@@ -248,6 +248,7 @@ class cli_vault:
                 for data in cli_note_data['data']:
                     if data['id'] == cli_note_id:
                         cli_note, description, tags = self.vim(data['cli_note'], data['description'], data['tags'])
+                        id_found = True
         else:
             # Loading data
             if self.is_valid_file_path():
@@ -272,7 +273,7 @@ class cli_vault:
                     with open(self.sv_cli_note_file_path, 'w') as outfile:
                         json.dump(cli_note_data, outfile, indent=4)
 
-                    return id_found, cli_note_id
+        return id_found, cli_note_id
 
     def update(self, args):
         id_found, cli_note_id = self._update(args)
