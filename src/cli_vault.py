@@ -177,6 +177,7 @@ class cli_vault:
 
                 return unique_id
 
+    # separated into two functions to test results
     def add(self, args):
         unique_id = self._add(args)
         print(unique_id + " created")
@@ -212,6 +213,7 @@ class cli_vault:
 
                 return id_found, cli_note_id
     
+    # separated into two functions to test results
     def delete(self, args):
         id_found, cli_note_id = self._delete(args)
         # Print if it was found or not
@@ -274,6 +276,7 @@ class cli_vault:
                     json.dump(cli_note_data, outfile, indent=4)
                     return id_found, cli_note_id
 
+    # separated into two functions to test results
     def update(self, args):
         id_found, cli_note_id = self._update(args)
 
