@@ -366,7 +366,7 @@ if __name__ == "__main__":
 
     # Search cli_note setup
     parser_search = subparsers.add_parser('search', help='Search for stored cli notes by text')
-    parser_search.add_argument('text', help='Id of cli note to update')
+    parser_search.add_argument('text', help='Id of cli note to update. With no flags, it will search through all')
     parser_search.add_argument('-a', action='store_true', help='Search for text in all (cli note, description, and tags)')
     parser_search.add_argument('-c', action='store_true', help='Search text by cli note')
     parser_search.add_argument('-d', action='store_true', help='Search text by description')
