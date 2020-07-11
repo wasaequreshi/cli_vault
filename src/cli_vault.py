@@ -240,6 +240,9 @@ class cli_vault:
         if tags != None:
             tags = tags.split(",")
 
+        # Setting up data
+        id_found = False
+
         if cli_note == None and description == None and tags == None:
             cli_note_data = {}
             with open(self.sv_cli_note_file_path) as json_file:
@@ -248,30 +251,27 @@ class cli_vault:
                 for data in cli_note_data['data']:
                     if data['id'] == cli_note_id:
                         cli_note, description, tags = self.vim(data['cli_note'], data['description'], data['tags'])
-        else:
-            # Loading data
-            if self.is_valid_file_path():
-                cli_note_data = {}
-                with open(self.sv_cli_note_file_path) as json_file:
-                    cli_note_data = json.load(json_file)
-                    
-                    # Setting up data
-                    id_found = False
+                        id_found = True
+        
+        # Loading data
+        if self.is_valid_file_path():
+            cli_note_data = {}
+            with open(self.sv_cli_note_file_path) as json_file:
+                cli_note_data = json.load(json_file)
 
-                    # Checking which data to update
-                    for data in cli_note_data['data']:
-                        if data['id'] == cli_note_id:
-                            if cli_note != None:
-                                data['cli_note'] = cli_note
-                            if description != None:
-                                data['description'] = description
-                            if tags != None:
-                                data['tags'] = tags
-                            id_found = True
-                    #Write back to file
-                    with open(self.sv_cli_note_file_path, 'w') as outfile:
-                        json.dump(cli_note_data, outfile, indent=4)
-
+                # Checking which data to update
+                for data in cli_note_data['data']:
+                    if data['id'] == cli_note_id:
+                        if cli_note != None:
+                            data['cli_note'] = cli_note
+                        if description != None:
+                            data['description'] = description
+                        if tags != None:
+                            data['tags'] = tags
+                        id_found = True
+                #Write back to file
+                with open(self.sv_cli_note_file_path, 'w') as outfile:
+                    json.dump(cli_note_data, outfile, indent=4)
                     return id_found, cli_note_id
 
     def update(self, args):
