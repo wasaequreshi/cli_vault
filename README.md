@@ -1,3 +1,8 @@
+#cli_vault
+
+[![Build Status](https://api.travis-ci.org/wasaequreshi/cli_vault.svg?branch=master)](https://travis-ci.org/wasaequreshi/cli_vault)
+
+
 # What is it?
 
 This tool helps developers improve productivity by managing commonly used commands and notes on the cli. 
