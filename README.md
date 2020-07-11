@@ -212,7 +212,7 @@ This is searching for 'into' and 'unique' in cli note, description, and tags.
     }
 ]
 
-➜  ~ cli-vault search unique -a 
+➜  ~ cli-vault search -a unique 
 [
     {
         "cli_note": [
@@ -256,7 +256,7 @@ This will only search for the terms on cli notes.
     }
 ]
 
-➜  ~ cli-vault search my_private_key -c
+➜  ~ cli-vault search -c my_private_key
 [
     {
         "cli_note": [
@@ -301,7 +301,7 @@ This will only search for the terms on description.
     }
 ]
 
-➜  ~ cli-vault search into -d 
+➜  ~ cli-vault search -d into 
 [
     {
         "cli_note": [
@@ -319,7 +319,7 @@ This will only search for the terms on description.
     }
 ]
 
-➜  ~ cli-vault search unique -d 
+➜  ~ cli-vault search -d unique
 No results :(
 ```
 
@@ -346,7 +346,7 @@ This will only search for the terms on tags.
     }
 ]
 
-➜  ~ cli-vault search unique -t 
+➜  ~ cli-vault search -t unique
 [
     {
         "cli_note": [
