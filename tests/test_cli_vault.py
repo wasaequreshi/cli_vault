@@ -91,7 +91,7 @@ class TestCliVault(unittest.TestCase):
 
             for d in data:
                 ids.append(d['id'])
-
+ 
         args = SimpleNamespace(cli_note_id=ids[0], cli_note="cli_note19",description=None,tags=None)
         self.sv._update(args)
         
