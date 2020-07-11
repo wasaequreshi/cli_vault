@@ -97,6 +97,14 @@ class cli_vault:
 
         return edited_message
 
+    # Processes input before passing to editor
+    def vim(self, cli_note, description, tags):
+        cli_note = self.vim_editor(["<cli note>"] if cli_note == [""] else cli_note)
+        description = self.vim_editor(["<description>"] if description == [""] else description)
+        tags = self.vim_editor(["<tags comma separated when passing via cli. If in vim, enter additional tags on new line>"] if tags == [""] else tags)
+
+        return cli_note, description, tags
+
     # get all words to check and lower them
     def lower_words(self, data):
         all_words = ""
@@ -109,13 +117,26 @@ class cli_vault:
                 all_words += word.lower()
         return all_words
 
-    # Processes input before passing to editor
-    def vim(self, cli_note, description, tags):
-        cli_note = self.vim_editor(["<cli note>"] if cli_note == [""] else cli_note)
-        description = self.vim_editor(["<description>"] if description == [""] else description)
-        tags = self.vim_editor(["<tags comma separated when passing via cli. If in vim, enter additional tags on new line>"] if tags == [""] else tags)
+    # Checking if multiple search in are passed to do an or and check what the boolean val would be
+    def search_in_helper(self, word, search_in, data):
+        result = False
 
-        return cli_note, description, tags
+        for si in search_in:
+            result = result or (word.lower() in self.lower_words(data[si]))
+        
+        return result
+
+    # search helper to search for text based on cli_note, description, tags, or all
+    def search_helper(self, text, search_in, cli_note_data, results, results_seen):
+
+        text = text.split(" ")
+        for word in text:
+            for data in cli_note_data['data']: 
+                if self.search_in_helper(word, search_in, data) and data['id'] not in results_seen:
+                    results.append(data)
+                    results_seen.append(data['id'])
+
+        return results, results_seen
 
     # cli_note to add
     def add(self, args):
@@ -250,21 +271,28 @@ class cli_vault:
                     print("Invalid id: " + cli_note_id)
 
     # Similar to ls, shows all the cli_notes stored
-    def list_cli_notes(self, args):
+    def _list_cli_notes(self, args):
         # Just loading the file
         if self.is_valid_file_path():
             cli_note_data = {}
             with open(self.sv_cli_note_file_path) as json_file:
                 cli_note_data = json.load(json_file)
                 
-                if len(cli_note_data['data']) == 0:
-                    print("No results :(")
-                else:
-                    # Doing a json pretty print
-                    self.pretty_print(cli_note_data)
+                return cli_note_data
+
+    # separated into two functions to test results
+    def list_cli_notes(self, args):
+        
+        cli_note_data = self._list_cli_notes(args)
+
+        if len(cli_note_data['data']) == 0:
+            print("No results :(")
+        else:
+            # Doing a json pretty print
+            self.pretty_print(cli_note_data)
 
     # Searching for cli_notes
-    def search(self, args):
+    def _search(self, args):
         # Getting arguments 
         text_all = args.a
         text_cli_note = args.c
@@ -278,14 +306,10 @@ class cli_vault:
             text_description = False
             text_tags = False
         
+        # If no flags passed, will search through all
         if not (text_all or text_cli_note or text_description or text_tags):
             text_all = True
             print("No flags passed, searching through all.")
-        # Need to ask for advice on whether to keep this, this does improve 
-        # performance, but ruins accuracy :(
-        # contents = contents.split(" ")
-        # contents = self.remove_stopwords(contents)
-        # contents = self.remove_punctuation(contents)
         
         # Loading file
         if self.is_valid_file_path():
@@ -297,45 +321,31 @@ class cli_vault:
                 results = []
                 # Searching all
                 if text_all:
-                    text = text.split(" ")
-                    for word in text:
-                        for data in cli_note_data['data']: 
-                            if (word.lower() in self.lower_words(data['cli_note']) or word.lower() in self.lower_words(data['description']) or word.lower() in self.lower_words(data['tags'])) and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
+                    results, results_seen = self.search_helper(text, ['cli_note', 'description', 'tags'], cli_note_data, results, results_seen)
 
                 # Searching via cli_note
                 if text_cli_note:
-                    text = text.split(" ")
-                    for cli_note in text:
-                        for data in cli_note_data['data']:
-                            if cli_note.lower() in self.lower_words(data['cli_note']) and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
+                    results, results_seen = self.search_helper(text, ['cli_note'], cli_note_data, results, results_seen)
                 
                 # Searching via description
                 if text_description:
-                    text = text.split(" ")
-                    for description in text:
-                        for data in cli_note_data['data']:
-                            if description.lower() in self.lower_words(data['description']) and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
+                    results, results_seen = self.search_helper(text, ['description'], cli_note_data, results, results_seen)
 
                 # Searching via tags
                 if text_tags:
-                    text = text.split(",")
-                    for tag in text:
-                        for data in cli_note_data['data']:
-                            if tag.lower() in self.lower_words(data['tags']) and data['id'] not in results_seen:
-                                results.append(data)
-                                results_seen.append(data['id'])
+                    results, results_seen = self.search_helper(text, ['tags'], cli_note_data, results, results_seen)
 
-                if len(results) == 0:
-                    print("No results :(")
-                else:
-                    self.pretty_print({"data" : results})
+                return results
 
+    # separated into two functions to test results
+    def search(self, args):
+        results = self._search(args)
+
+         # Printing proper message
+        if len(results) == 0:
+            print("No results :(")
+        else:
+            self.pretty_print({"data" : results})
 # Add argument parser to handle params and options
 if __name__ == "__main__":
     

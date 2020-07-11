@@ -101,6 +101,72 @@ class TestCliVault(unittest.TestCase):
             self.assertTrue(len(data) == 3)
             self.assertTrue(data[0]['cli_note'] == ["cli_note19"] and data[0]['description'] == ["description"] and data[0]['tags'] == ["tags"])
 
+    def test_search(self):
+        args = SimpleNamespace(cli_note="ssh -i my_private_key ubuntu@localhost",description="ssh into server with private key",tags="ssh,private key,unique")
+        self.sv.add(args)
+
+        args = SimpleNamespace(text='into', a=False, c=False, d=False, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(results[0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results[0]['description'] == ["ssh into server with private key"] and results[0]['tags'] == ["ssh","private key","unique"])
+
+        args = SimpleNamespace(text='unique', a=True, c=False, d=False, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(results[0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results[0]['description'] == ["ssh into server with private key"] and results[0]['tags'] == ["ssh","private key","unique"])
+
+        args = SimpleNamespace(text='my_private_key', a=False, c=True, d=False, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(results[0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results[0]['description'] == ["ssh into server with private key"] and results[0]['tags'] == ["ssh","private key","unique"])
+
+        args = SimpleNamespace(text='unique', a=False, c=True, d=False, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(len(results) == 0)
+
+        args = SimpleNamespace(text='into', a=False, c=False, d=True, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(results[0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results[0]['description'] == ["ssh into server with private key"] and results[0]['tags'] == ["ssh","private key","unique"])
+        
+        args = SimpleNamespace(text='unique', a=False, c=False, d=True, t=False)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(len(results) == 0)
+
+        args = SimpleNamespace(text='unique', a=False, c=False, d=False, t=True)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(results[0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results[0]['description'] == ["ssh into server with private key"] and results[0]['tags'] == ["ssh","private key","unique"])
+        
+        args = SimpleNamespace(text='into', a=False, c=False, d=False, t=True)
+
+        results = self.sv._search(args)
+
+        self.assertTrue(len(results) == 0)
+
+    def test_list(self):
+        
+        results = self.sv._list_cli_notes(None)
+
+        self.assertTrue(len(results['data']) == 0)
+
+        args = SimpleNamespace(cli_note="ssh -i my_private_key ubuntu@localhost",description="ssh into server with private key",tags="ssh,private key,unique")
+        self.sv.add(args)
+        args = SimpleNamespace(cli_note="ssh -i my_private_key ubuntu@localhost",description="ssh into server with private key",tags="ssh,private key,unique")
+
+        results = self.sv._list_cli_notes(None)
+        # print(results)
+        self.assertTrue(results['data'][0]['cli_note'] == ["ssh -i my_private_key ubuntu@localhost"] and results['data'][0]['description'] == ["ssh into server with private key"] and results['data'][0]['tags'] == ["ssh","private key","unique"])
+
     def tearDown(self):
         dir_path = os.path.join(".secure_vault")
         shutil.rmtree(dir_path)
